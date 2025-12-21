@@ -1,16 +1,72 @@
-# fit_go
+# FitGo – Fitness & Workout App (Flutter)
 
-A new Flutter project.
+## Project Overview
+**FitGo** is a mobile fitness application built using **Flutter**.  
+The app helps users **lose weight** or **build muscle** by providing guided workouts, timers, and progress tracking.
 
-## Getting Started
+This project is created as the **final project for the Frontend (Flutter) course**.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## Purpose of the App
+- Help users choose workouts based on their body information  
+- Support both **weight loss** and **muscle gain**  
+- Provide simple **daily workout plans**  
+- Track workout progress and completion  
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Main Features
+- Onboarding screens with app introduction  
+- Gender selection (Male / Female)  
+- Height and weight input  
+- User information form  
+- BMI / weight average result  
+- Daily workout plans (Day 1 – Day 7)  
+- Exercise list with images  
+- Workout timer (reps and time-based)  
+- Progress tracking (completed percentage)  
+- Clean and modern UI design  
+
+---
+
+## Technologies Used
+- Flutter  
+- Dart  
+- Material UI Widgets  
+- Frontend only (no backend)  
+
+---
+
+## App Screens
+- Welcome and onboarding pages  
+- User setup (gender, height, weight)  
+- Workout dashboard  
+- Daily exercise list  
+- Exercise detail screen with timer  
+
+---
+
+## What I Learned
+- Flutter layout system (Column, Row, Stack)  
+- Navigation between screens  
+- Using widgets and custom UI components  
+- Handling user input  
+- Basic state handling for UI updates  
+- Designing mobile-friendly interfaces  
+
+---
+
+## Future Improvements
+- Add backend and user authentication  
+- Save workout progress using a database  
+- Add more workout types  
+- Add dark mode  
+- Improve animations and overall UX  
+
+---
+
+## Student Information
+**Project Name:** FitGo  
+**Course:** Frontend Development (Flutter)  
+**Project Type:** Final Project  
