@@ -1,3 +1,4 @@
+import 'package:fit_go/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 
 class HookPage extends StatelessWidget {
@@ -20,27 +21,7 @@ class HookPage extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 30, 10, 30),
-            child: Row(
-              children: [
-                ClipOval(
-                  child: Image.asset(
-                    'assets/images/fitness.png',
-                    width: 40,
-                    height: 40,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Fit GO',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
+            child: Appbar()
           ),
           Expanded(
             child: Stack(

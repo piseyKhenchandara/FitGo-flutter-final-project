@@ -1,5 +1,5 @@
-import 'package:fit_go/ui/hook_page.dart';
-import 'package:fit_go/ui/welcome_page.dart';
+import 'package:fit_go/ui/onboarding/hook_page.dart';
+import 'package:fit_go/ui/onboarding/welcome_page.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingPage extends StatefulWidget {
