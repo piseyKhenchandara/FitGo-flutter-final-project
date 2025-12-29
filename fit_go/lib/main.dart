@@ -1,6 +1,4 @@
 import 'package:fit_go/router/app_router.dart';
-import 'package:fit_go/ui/onboarding/onboarding_page.dart';
-import 'package:fit_go/ui/onboarding/welcome_page.dart';
 import 'package:flutter/material.dart';
 
 
