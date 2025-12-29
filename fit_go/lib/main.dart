@@ -1,3 +1,4 @@
+import 'package:fit_go/router/app_router.dart';
 import 'package:fit_go/ui/onboarding/onboarding_page.dart';
 import 'package:fit_go/ui/onboarding/welcome_page.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +14,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+
+
       debugShowCheckedModeBanner: false,
-      home : OnboardingPage(),
+      routerConfig: AppRouter.router,
+      
     );
   }
 }
