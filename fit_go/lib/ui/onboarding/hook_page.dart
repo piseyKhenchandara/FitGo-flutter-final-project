@@ -13,73 +13,78 @@ class HookPage extends StatelessWidget {
   final String text;
   final VoidCallback onNext;
 
+  void showSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.black.withOpacity(0.9),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+        ),
+        duration: const Duration(days: 1), // stays until Next clicked
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              text,
+              style: const TextStyle(color: Colors.white, fontSize: 24),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                onNext();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue[400],
+              ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 8),
+                child: Text(
+                  'NEXT',
+                  style: TextStyle(fontSize: 28, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.blue[400],
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 30, 10, 30),
-            child: Appbar()
-          ),
-          Expanded(
-            child: Stack(
-              children: [
-                Image.asset(
-                  image,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
-                ),
-                Container(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: double.infinity,
-                    height: MediaQuery.of(context).size.height * 0.4,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.9),
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30)
-                      )
-                    ),
-                    child:Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+    // Show snackbar AFTER build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showSnackBar(context);
+    });
 
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(2),
-                          child: Text(
-                            text,
-                            style: TextStyle(color: Colors.white, fontSize: 30),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        
-                        ElevatedButton(
-                          onPressed: onNext,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue[400],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(50, 5, 50, 5),
-
-                            child: const Text(
-                              'next',
-                              style: TextStyle(fontSize: 50, color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        
-                      ],
-                    ),
-                  )
-                ),      
-              ],
+    return Scaffold(
+      body: Container(
+        color: Colors.blue[400],
+        child: Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.fromLTRB(10, 30, 10, 30),
+              child: Appbar(),
             ),
-          ),
-        ],
+            Expanded(
+              child: Image.asset(
+                image,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
