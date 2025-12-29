@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: '/height_page',
+    initialLocation: '/setup/gender',
 
     routes: [
 
@@ -21,13 +21,6 @@ class AppRouter {
       GoRoute(path: '/setup/user_info', name : 'user_info', builder: (context, state) => UserInfoPage(),),
 
       GoRoute(path: '/setup/weight_avg', name : 'weight_avg', builder: (context, state) => WeightAvgPage(),),
-
-
-
-
-
-      
-      
 
 
     ],
