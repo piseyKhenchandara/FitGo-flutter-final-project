@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../widgets/appbar.dart';
 
 class WeightPage extends StatefulWidget {
-  const WeightPage({super.key});
+  const WeightPage({super.key, this.height});
+
+  final int? height;
 
   @override
   State<WeightPage> createState() => _WeightPageState();
@@ -100,10 +103,32 @@ class _WeightPageState extends State<WeightPage> {
               ' kg',
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 24,
+                fontSize: 36,
                 fontWeight: FontWeight.bold,
               ),
             ),
+
+            const SizedBox(height: 120,),
+
+            ElevatedButton(
+            onPressed: () {
+                // Navigate back to the HeightPage using GoRouter
+                context.go('/setup/weight_avg',  extra: {
+                  'weight': selectedWeight,
+                  'height': widget.height,
+                });
+              },
+            child: const Padding(
+              padding: const EdgeInsets.fromLTRB(50, 5, 50, 5),
+              child: Text(
+                'Next',
+                style: TextStyle(
+                  fontSize: 50, 
+                  color: Colors.blue
+                ),
+              ),
+            ),
+          ),
           ],
         ),
       ),

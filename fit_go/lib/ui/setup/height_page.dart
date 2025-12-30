@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../widgets/appbar.dart';
 
 class HeightPage extends StatefulWidget {
@@ -73,7 +74,24 @@ class _HeightPageState extends State<HeightPage> {
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 120),
+
+            ElevatedButton(
+            onPressed: () {
+                // Navigate back to the HeightPage using GoRouter
+                context.go('/setup/weight',  extra: selectedHeight);
+              },
+            child: const Padding(
+              padding: EdgeInsets.fromLTRB(50, 5, 50, 5),
+              child: Text(
+                'Next',
+                style: TextStyle(
+                  fontSize: 50, 
+                  color: Colors.blue
+                ),
+              ),
+            ),
+          ),
             
           ],
         ),
