@@ -119,7 +119,7 @@ class _WeightPageState extends State<WeightPage> {
                 });
               },
             child: const Padding(
-              padding: const EdgeInsets.fromLTRB(50, 5, 50, 5),
+              padding: EdgeInsets.fromLTRB(50, 5, 50, 5),
               child: Text(
                 'Next',
                 style: TextStyle(

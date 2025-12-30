@@ -1,7 +1,7 @@
 import 'package:fit_go/data/avg_weight.dart';
 import 'package:fit_go/widgets/appbar.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+// import 'package:go_router/go_router.dart';
 
 class WeightAvgPage extends StatefulWidget {
   const WeightAvgPage({super.key, this.height, this.weight});

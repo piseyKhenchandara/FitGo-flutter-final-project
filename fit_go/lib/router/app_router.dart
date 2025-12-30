@@ -1,3 +1,4 @@
+import 'package:fit_go/ui/display/homepage.dart';
 import 'package:fit_go/ui/setup/gender_page.dart';
 import 'package:fit_go/ui/setup/height_page.dart';
 import 'package:fit_go/ui/setup/user_info_page.dart';
@@ -23,6 +24,7 @@ class AppRouter {
           height: args?['height'] as int?,
         );},
       ),
+      GoRoute(path: '/homepage', name : 'homepage', builder: (context, state) => Homepage(),),
 
     ],
   );

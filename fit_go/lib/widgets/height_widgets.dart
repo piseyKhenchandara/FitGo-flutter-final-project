@@ -94,6 +94,7 @@ class _HeightWidgetsState extends State<HeightWidgets> {
                               isSelected ? FontWeight.bold : FontWeight.normal,
                           color: isSelected
                               ? Colors.white
+                              // ignore: deprecated_member_use
                               : Colors.white.withOpacity(0.4),
                         ),
                       ),
