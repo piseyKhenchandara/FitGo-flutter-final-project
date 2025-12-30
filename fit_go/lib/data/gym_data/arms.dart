@@ -1,4 +1,4 @@
-import 'package:fit_go/data/gym_option/activity_model.dart';
+import 'package:fit_go/models/activity_model.dart';
 
 List<ActivityModel> arms = [
   ActivityModel(

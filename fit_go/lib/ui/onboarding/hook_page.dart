@@ -26,7 +26,7 @@ class HookPage extends StatelessWidget {
             topRight: Radius.circular(30),
           ),
         ),
-        duration: const Duration(days: 1), // stays until Next clicked
+        duration: const Duration(days: 1), 
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         content: Column(
           mainAxisSize: MainAxisSize.min,

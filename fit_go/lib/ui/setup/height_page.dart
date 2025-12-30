@@ -1,4 +1,5 @@
 
+import 'package:fit_go/controllers/user_setup_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../widgets/appbar.dart';
@@ -78,8 +79,8 @@ class _HeightPageState extends State<HeightPage> {
 
             ElevatedButton(
             onPressed: () {
-                // Navigate back to the HeightPage using GoRouter
-                context.go('/setup/weight',  extra: selectedHeight);
+                userSetupController.height = selectedHeight;
+                context.go('/setup/weight');
               },
             child: const Padding(
               padding: EdgeInsets.fromLTRB(50, 5, 50, 5),

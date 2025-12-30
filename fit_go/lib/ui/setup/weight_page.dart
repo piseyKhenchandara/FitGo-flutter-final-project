@@ -1,3 +1,4 @@
+import 'package:fit_go/controllers/user_setup_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../widgets/appbar.dart';
@@ -98,7 +99,7 @@ class _WeightPageState extends State<WeightPage> {
 
             const SizedBox(height: 20),
 
-            // Selected weight text
+            
             Text(
               ' kg',
               style: const TextStyle(
@@ -112,11 +113,9 @@ class _WeightPageState extends State<WeightPage> {
 
             ElevatedButton(
             onPressed: () {
-                // Navigate back to the HeightPage using GoRouter
-                context.go('/setup/weight_avg',  extra: {
-                  'weight': selectedWeight,
-                  'height': widget.height,
-                });
+              
+                userSetupController.weight = selectedWeight;
+                context.go('/setup/weight_avg');
               },
             child: const Padding(
               padding: EdgeInsets.fromLTRB(50, 5, 50, 5),

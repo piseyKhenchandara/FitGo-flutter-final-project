@@ -2,6 +2,7 @@ import 'package:fit_go/data/hook_page.dart';
 import 'package:fit_go/ui/onboarding/hook_page.dart';
 import 'package:fit_go/ui/onboarding/welcome_page.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 
 class OnboardingPage extends StatefulWidget {
@@ -16,6 +17,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
   int currentIndex = 0;
 
   void nextPage() {
+
+    if(currentIndex == hookPages.length -1) {
+      return context.go('/setup/gender');
+    };
+
     if (currentIndex < hookPages.length) {
       _controller.nextPage(
         duration: const Duration(milliseconds: 300),

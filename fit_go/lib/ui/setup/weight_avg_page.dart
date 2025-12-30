@@ -1,13 +1,13 @@
+import 'package:fit_go/controllers/user_setup_controller.dart';
 import 'package:fit_go/data/avg_weight.dart';
 import 'package:fit_go/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 // import 'package:go_router/go_router.dart';
 
 class WeightAvgPage extends StatefulWidget {
-  const WeightAvgPage({super.key, this.height, this.weight});
+  const WeightAvgPage({super.key});
 
-  final int? height;
-  final int? weight;
+
 
   @override
   State<WeightAvgPage> createState() => _WeightAvgPageState();
@@ -37,9 +37,14 @@ class _WeightAvgPageState extends State<WeightAvgPage> {
   }
 
   void calculate() {
-    if (widget.weight != null && widget.height != null) {
-      final heightInMeters = widget.height! / 100;
-      bmi = widget.weight! / (heightInMeters * heightInMeters);
+
+    final weight = userSetupController.weight;
+    final height = userSetupController.height;
+
+
+    if (weight != null && height != null) {
+      final heightInMeters = height / 100;
+      bmi = weight / (heightInMeters * heightInMeters);
       compareWithAverage();
     }
   }
