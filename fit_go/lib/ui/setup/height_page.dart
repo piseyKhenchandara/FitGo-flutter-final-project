@@ -1,5 +1,4 @@
-import 'package:fit_go/widgets/height_widgets_copy.dart';
-import 'package:fit_go/widgets/height_widgets.dart';
+
 import 'package:flutter/material.dart';
 import '../../widgets/appbar.dart';
 
@@ -38,20 +37,7 @@ class _HeightPageState extends State<HeightPage> {
 
             const SizedBox(height: 40),
 
-            // /// HEIGHT PICKER
-            // Expanded( // <-- give scrollable list space
-            //   child: Padding(
-            //     padding: const EdgeInsets.symmetric(horizontal: 40),
-            //     child: HeightWidgetsCopy(
-            //       height: selectedHeight,
-            //       onChanged: (value) {
-            //         setState(() {
-            //           selectedHeight = value;
-            //         });
-            //       },
-            //     ),
-            //   ),
-            // ),
+          
 
             // WHEEL
             SizedBox(

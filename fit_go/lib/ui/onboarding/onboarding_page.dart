@@ -1,7 +1,8 @@
+import 'package:fit_go/data/hook_page.dart';
 import 'package:fit_go/ui/onboarding/hook_page.dart';
 import 'package:fit_go/ui/onboarding/welcome_page.dart';
 import 'package:flutter/material.dart';
-import '../../data/hook.dart';
+
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
