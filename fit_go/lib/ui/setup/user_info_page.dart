@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:fit_go/controllers/user_setup_controller.dart';
+import 'package:fit_go/service/user_service.dart';
 import 'package:fit_go/widgets/appbar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserInfoPage extends StatefulWidget {
@@ -254,6 +256,27 @@ class _UserInfoPageState extends State<UserInfoPage> {
               ),
 
             const SizedBox(height: 40),
+
+            ElevatedButton(onPressed: () {
+              String? error = UserService.saveUserInfo(_nameController.text, _ageController.text);
+              
+              if(error !=null) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+                return;
+              } 
+
+              UserService.saveProfileImage(_profileImage, _webImage);
+
+              context.go('/setup/gender');
+
+            }, 
+            child: const Padding(
+              padding: EdgeInsets.fromLTRB(50, 5, 50, 5),
+              child: Text('Next',style: TextStyle(fontSize: 50, color: Colors.blue),),
+              ) ,
+              
+              ),
+            
             ]
             
       ),

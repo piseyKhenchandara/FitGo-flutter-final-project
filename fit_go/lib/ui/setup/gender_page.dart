@@ -1,4 +1,5 @@
 import 'package:fit_go/controllers/user_setup_controller.dart';
+import 'package:fit_go/service/user_service.dart';
 import 'package:fit_go/widgets/appbar.dart';
 import 'package:fit_go/widgets/gender_widgets.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class GenderPage extends StatefulWidget {
 }
 
 class _GenderPageState extends State<GenderPage> {
-  String? selectedGender;
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,7 +41,7 @@ class _GenderPageState extends State<GenderPage> {
               text : 'female',
               color : Colors.pink[300]!,
               onPressed: () {
-                userSetupController.gender = 'female';
+                UserService.saveGender('female');
                 context.go('/setup/height');
               }
           ),
@@ -51,7 +52,7 @@ class _GenderPageState extends State<GenderPage> {
               text : 'male',
               color : Colors.blue[300]!,
               onPressed: () {
-                userSetupController.gender = 'male';
+                UserService.saveGender('male');
                 context.go('/setup/height');
               },
           ), 

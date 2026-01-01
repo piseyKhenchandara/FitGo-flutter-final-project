@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 class UserSetupController {
   String? gender;
   int? height;
@@ -6,6 +9,8 @@ class UserSetupController {
   
   String? name;
   int? age;
+  File? profileImage;
+  Uint8List? profileImageWeb;
 
   bool get isComplete{
     return gender !=null && height !=null && weight !=null && weight_avg !=null && name!=null && age !=null;
@@ -20,6 +25,8 @@ class UserSetupController {
       "weight_avg" : weight_avg,
       'name'  : name,
       'age' : age,
+      // Error: type 'File' is not a subtype of type 'String' in JSON (so we donn't have to write both profile image and profileimageweb into this path)
+      
     };
   }
 
@@ -30,6 +37,8 @@ class UserSetupController {
     weight = null;
     name = null;
     age = null;
+    profileImage = null;
+    profileImageWeb = null;
 
   }
 }
