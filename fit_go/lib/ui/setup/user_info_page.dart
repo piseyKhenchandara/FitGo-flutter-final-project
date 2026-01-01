@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fit_go/controllers/user_setup_controller.dart';
 import 'package:fit_go/widgets/appbar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,22 @@ class _UserInfoPageState extends State<UserInfoPage> {
   Uint8List? _webImage; // new
   
   final ImagePicker _picker = ImagePicker();
+
+
+
+  @override 
+  void initState() {
+    super.initState();
+
+    if(userSetupController.name != null) {
+      _nameController.text = userSetupController.name!;
+      
+    }
+    if(userSetupController.age !=null) {
+      _ageController.text = userSetupController.age.toString()!;
+    }
+    
+  }
 
 
   Future<void> _pickImage(ImageSource source) async {
