@@ -55,8 +55,9 @@ class _WeightAvgPageState extends State<WeightAvgPage> {
               child: Center(
                 child: SingleChildScrollView(
                   child: Container(
-                    width: 350,
+                    width: 450,
                     padding: const EdgeInsets.all(20),
+                    margin: EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(30),
@@ -88,8 +89,58 @@ class _WeightAvgPageState extends State<WeightAvgPage> {
                         Text(
                           selectedAvgWeight.comment,
                           style: TextStyle(
-                              color: selectedAvgWeight.color, fontSize: 28),
+                            color: selectedAvgWeight.color,
+                            fontSize: 15,
+                          ),
                         ),
+
+                        const SizedBox(height: 30),
+
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Choose your options :',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              'lost weight',
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                height: 1.5,
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+
+                            Text(
+                              'gain musle',
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                height: 1.5,
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+
+                            Text(
+                              'stay fit',
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                height: 1.5,
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+                          ],
+
+                        ),
+                        Image.asset('assets/bmi/bmi.png', width: double.infinity, height: 200, fit: BoxFit.contain,)
                       ],
                     ),
                   ),
