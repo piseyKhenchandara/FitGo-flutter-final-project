@@ -1,4 +1,7 @@
 import 'package:fit_go/controllers/user_setup_controller.dart';
+import 'package:fit_go/helpers/snackbar_helper.dart';
+import 'package:fit_go/service/user_service.dart';
+import 'package:fit_go/widgets/back_next_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../widgets/appbar.dart';
@@ -111,23 +114,19 @@ class _WeightPageState extends State<WeightPage> {
 
             const SizedBox(height: 120,),
 
-            ElevatedButton(
-            onPressed: () {
-              
-                userSetupController.weight = selectedWeight;
-                context.go('/setup/weight_avg');
+            BackNextButton(
+              go_back: true,
+              go_next: true,
+              backRoute: '/setup/height',
+              onNext: () {
+                UserService.saveWeight(selectedWeight);
+                SnackbarHelper.showInfo(context, 'You selected weight : ${userSetupController.weight} kg');
+                return true;
               },
-            child: const Padding(
-              padding: EdgeInsets.fromLTRB(50, 5, 50, 5),
-              child: Text(
-                'Next',
-                style: TextStyle(
-                  fontSize: 50, 
-                  color: Colors.blue
-                ),
-              ),
-            ),
-          ),
+              nextRoute: '/setup/weight_avg',
+
+              
+            )
           ],
         ),
       ),

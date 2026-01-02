@@ -1,6 +1,8 @@
 import 'package:fit_go/controllers/user_setup_controller.dart';
+import 'package:fit_go/helpers/snackbar_helper.dart';
 import 'package:fit_go/service/user_service.dart';
 import 'package:fit_go/widgets/appbar.dart';
+import 'package:fit_go/widgets/back_next_button.dart';
 import 'package:fit_go/widgets/gender_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -16,7 +18,8 @@ class _GenderPageState extends State<GenderPage> {
   
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Scaffold(
+    body : Container(
 
       color: Colors.blue[400],
 
@@ -42,7 +45,7 @@ class _GenderPageState extends State<GenderPage> {
               color : Colors.pink[300]!,
               onPressed: () {
                 UserService.saveGender('female');
-                context.go('/setup/height');
+                
               }
           ),
         
@@ -53,14 +56,38 @@ class _GenderPageState extends State<GenderPage> {
               color : Colors.blue[300]!,
               onPressed: () {
                 UserService.saveGender('male');
-                context.go('/setup/height');
+                
               },
           ), 
+
+
+              BackNextButton(
+                go_back: true,
+                go_next: true, 
+                backRoute: '/setup/user_info',
+                nextRoute: '/setup/height',
+                onNext: () {
+                  // Validation: ensure gender is selected
+                  if (userSetupController.gender == null) {
+                    SnackbarHelper.showError(context, "please select a gender");
+                    return false;
+                  }
+
+                  if(userSetupController.gender == 'female' || userSetupController.gender == 'male') {
+                    SnackbarHelper.showInfo(context, 'You selected ${userSetupController.gender}');
+
+                  }
+                  return true;
+                },
+              ),
+
+          
 
 
        
         ],
       ),
-    );
+    ),
+  );
   }
 }

@@ -10,16 +10,20 @@ import 'package:go_router/go_router.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: '/onboardingg',
+    initialLocation: '/onboarding',
 
     routes: [
-
-      GoRoute(path: '/onboardingg', name: 'onboard', builder: (context, state) => const UserInfoPage(),),
-
       GoRoute(
         path: '/onboarding',
         name: "onboarding",
         builder: (context, state) => OnboardingPage(),
+      ),
+
+      
+      GoRoute(
+        path: '/setup/user_info',
+        name: 'onboard',
+        builder: (context, state) => const UserInfoPage(),
       ),
       GoRoute(
         path: '/setup/gender',

@@ -19,7 +19,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   void nextPage() {
 
     if(currentIndex == hookPages.length -1) {
-      return context.go('/setup/gender');
+      return context.go('/setup/user_info');
     };
 
     if (currentIndex < hookPages.length) {
