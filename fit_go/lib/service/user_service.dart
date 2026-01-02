@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:fit_go/controllers/user_setup_controller.dart';
+import 'package:fit_go/models/enums.dart';
 import 'package:fit_go/service/validation_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,8 @@ class UserService {
     int age = int.parse(ageText);
     userSetupController.name = name;
     userSetupController.age = age;
+
+    return null;
     
   }
 
@@ -46,6 +49,11 @@ class UserService {
 
   static int? saveWeight(int weight) {
     return userSetupController.weight = weight;
+  }
+
+
+  static GoalType saveGoalType(GoalType choice) {
+      return userSetupController.goal = choice;
   }
 
   static double? calculateBMI() {

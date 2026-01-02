@@ -3,6 +3,7 @@ import 'package:fit_go/ui/onboarding/onboarding_page.dart';
 
 import 'package:fit_go/ui/setup/gender_page.dart';
 import 'package:fit_go/ui/setup/height_page.dart';
+import 'package:fit_go/ui/setup/schedule_page.dart';
 import 'package:fit_go/ui/setup/user_info_page.dart';
 import 'package:fit_go/ui/setup/weight_avg_page.dart';
 import 'package:fit_go/ui/setup/weight_page.dart';
@@ -19,7 +20,6 @@ class AppRouter {
         builder: (context, state) => OnboardingPage(),
       ),
 
-      
       GoRoute(
         path: '/setup/user_info',
         name: 'onboard',
@@ -51,6 +51,13 @@ class AppRouter {
         name: 'weight_avg',
         builder: (context, state) => const WeightAvgPage(),
       ),
+
+      GoRoute(
+        path: '/setup/schedule',
+        name: 'schedule',
+        builder: (context, state) => SchedulePage(),
+      ),
+      
       GoRoute(
         path: '/homepage',
         name: 'homepage',

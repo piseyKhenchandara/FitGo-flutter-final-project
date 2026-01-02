@@ -1,8 +1,12 @@
 import 'package:fit_go/controllers/user_setup_controller.dart';
 import 'package:fit_go/data/avg_weight.dart';
+import 'package:fit_go/helpers/snackbar_helper.dart';
+import 'package:fit_go/models/enums.dart';
 import 'package:fit_go/service/user_service.dart';
 import 'package:fit_go/widgets/appbar.dart';
+import 'package:fit_go/widgets/goal_choice.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class WeightAvgPage extends StatefulWidget {
   const WeightAvgPage({super.key});
@@ -14,6 +18,8 @@ class WeightAvgPage extends StatefulWidget {
 class _WeightAvgPageState extends State<WeightAvgPage> {
   double bmi = 0;
   AvgWeight selectedAvgWeight = avgList[0];
+
+  GoalType? selectedGoal;
 
   @override
   void initState() {
@@ -28,6 +34,7 @@ class _WeightAvgPageState extends State<WeightAvgPage> {
     if (calculatedBMI != null) {
       bmi = calculatedBMI;
       compareWithAverage();
+      autoSelectGoal();
     }
   }
 
@@ -37,6 +44,16 @@ class _WeightAvgPageState extends State<WeightAvgPage> {
         selectedAvgWeight = avgList[i];
         break;
       }
+    }
+  }
+
+  void autoSelectGoal() {
+    if (bmi < 18.5) {
+      selectedGoal = GoalType.gainMuscle;
+    } else if (bmi < 25) {
+      selectedGoal = GoalType.stayFit;
+    } else {
+      selectedGoal = GoalType.loseWeight;
     }
   }
 
@@ -111,36 +128,55 @@ class _WeightAvgPageState extends State<WeightAvgPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text(
-                              'lost weight',
-                              style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                height: 1.5,
-                                fontWeight: FontWeight.bold
-                              ),
+                            GoalChoice(
+                              text: 'Stay Fit',
+                              selectedGoal: selectedGoal,
+                              goalType: GoalType.stayFit,
+                              onPress: () {
+                                UserService.saveGoalType(GoalType.stayFit);
+                                SnackbarHelper.showInfo(
+                                  context,
+                                  "You selected stay fit.",
+                                );
+                                context.go('/setup/schedule');
+                              },
                             ),
 
-                            Text(
-                              'gain musle',
-                              style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                height: 1.5,
-                                fontWeight: FontWeight.bold
-                              ),
+                            GoalChoice(
+                              text: 'Gain muscle',
+                              selectedGoal: selectedGoal,
+                              goalType: GoalType.gainMuscle,
+                              onPress: () {
+                                UserService.saveGoalType(GoalType.gainMuscle);
+                                SnackbarHelper.showInfo(
+                                  context,
+                                  "You selected gain muscle",
+                                );
+                                context.go('/setup/schedule');
+                              },
                             ),
 
-                            Text(
-                              'stay fit',
-                              style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                height: 1.5,
-                                fontWeight: FontWeight.bold
-                              ),
+                            GoalChoice(
+                              text: 'Lost weight',
+                              selectedGoal: selectedGoal,
+                              goalType: GoalType.loseWeight,
+                              onPress: () {
+                                UserService.saveGoalType(GoalType.loseWeight);
+                                SnackbarHelper.showInfo(
+                                  context,
+                                  "You selected lost weight",
+                                );
+                                context.go('/setup/schedule');
+                              },
                             ),
                           ],
-
                         ),
-                        Image.asset('assets/bmi/bmi.png', width: double.infinity, height: 200, fit: BoxFit.contain,)
+                        Image.asset(
+                          'assets/bmi/bmi.png',
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.contain,
+                        ),
                       ],
                     ),
                   ),
