@@ -30,6 +30,31 @@ This project is created as the **final project for the Frontend (Flutter) course
 
 ---
 
+## Architecture Overview
+
+![FitGo Architecture](./docs/architecture.svg)
+
+### Architecture Flow:
+The application follows a clean layered architecture pattern:
+
+1. **User Layer** → Users interact through mobile and web interfaces
+2. **Flutter Application** → Cross-platform framework handling the app
+3. **UI Layer** → Screens, pages, widgets, and state management
+4. **Data Layer** → Models and enums for data structure
+5. **Service Layer** → Business logic (UserService, ValidationService, StorageService)
+6. **UserSetupController** → Central singleton for in-memory state management
+7. **Storage Layer** → Platform-specific persistent storage (File System for mobile, SharedPreferences for web)
+
+#### Data Flow:
+**Save Flow:**
+1. User Input → UI Layer → ValidationService → UserService → UserSetupController (in-memory)
+2. When complete → UserLocalStorageService.saveUserSetup() → Storage (JSON)
+
+**Load Flow:**
+1. UserLocalStorageService.loadUserSetup() → Read JSON → Load into UserSetupController
+
+---
+
 ## Technologies Used
 - Flutter  
 - Dart  
@@ -47,16 +72,6 @@ This project is created as the **final project for the Frontend (Flutter) course
 
 ---
 
-## What I Learned
-- Flutter layout system (Column, Row, Stack)  
-- Navigation between screens  
-- Using widgets and custom UI components  
-- Handling user input  
-- Basic state handling for UI updates  
-- Designing mobile-friendly interfaces  
-
----
-
 ## Future Improvements
 - Add backend and user authentication  
 - Save workout progress using a database  
@@ -66,7 +81,3 @@ This project is created as the **final project for the Frontend (Flutter) course
 
 ---
 
-## Student Information
-**Project Name:** FitGo  
-**Course:** Frontend Development (Flutter)  
-**Project Type:** Final Project  
