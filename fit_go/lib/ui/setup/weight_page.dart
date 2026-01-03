@@ -7,18 +7,18 @@ import 'package:go_router/go_router.dart';
 import '../../widgets/appbar.dart';
 
 class WeightPage extends StatefulWidget {
-  const WeightPage({super.key, this.height});
+  const WeightPage({super.key});
 
-  final int? height;
+
 
   @override
   State<WeightPage> createState() => _WeightPageState();
 }
 
 class _WeightPageState extends State<WeightPage> {
-  int selectedWeight = 73; // default weight (center)
-  final int minWeight = 30;
-  final int maxWeight = 200;
+  double selectedWeight  = 73; // default weight (center)
+  final double minWeight = 30;
+  final double maxWeight = 200;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,7 @@ class _WeightPageState extends State<WeightPage> {
                 quarterTurns: -1,
                 child: ListWheelScrollView.useDelegate(
                   controller: FixedExtentScrollController(
-                    initialItem: selectedWeight - minWeight,
+                    initialItem: (selectedWeight - minWeight).toInt(),
                   ),
                   physics: const FixedExtentScrollPhysics(),
                   itemExtent: 60,
@@ -72,7 +72,7 @@ class _WeightPageState extends State<WeightPage> {
                     });
                   },
                   childDelegate: ListWheelChildBuilderDelegate(
-                    childCount: maxWeight - minWeight + 1,
+                    childCount: (maxWeight - minWeight + 1).toInt(),
                     builder: (context, index) {
                       final value = minWeight + index;
                       final isSelected = value == selectedWeight;

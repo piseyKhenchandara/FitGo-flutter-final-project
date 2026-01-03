@@ -5,7 +5,6 @@ import 'package:fit_go/widgets/appbar.dart';
 import 'package:fit_go/widgets/back_next_button.dart';
 import 'package:fit_go/widgets/gender_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class GenderPage extends StatefulWidget {
   const GenderPage({super.key});

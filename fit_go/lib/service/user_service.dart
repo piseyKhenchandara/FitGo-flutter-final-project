@@ -5,7 +5,6 @@ import 'package:fit_go/controllers/user_setup_controller.dart';
 import 'package:fit_go/models/enums.dart';
 import 'package:fit_go/service/validation_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
 class UserService {
   
@@ -47,8 +46,12 @@ class UserService {
     return userSetupController.height = height;
   }
 
-  static int? saveWeight(int weight) {
+  static double? saveWeight(double weight) {
     return userSetupController.weight = weight;
+  }
+
+  static double? saveBMI (double bmi) {
+    return userSetupController.weight_avg = bmi;
   }
 
 

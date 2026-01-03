@@ -6,8 +6,8 @@ import 'package:fit_go/models/enums.dart';
 class UserSetupController {
   String? gender;
   int? height;
-  int? weight;
-  int? weight_avg;
+  double? weight;
+  double? weight_avg;
 
   String? name;
   int? age;

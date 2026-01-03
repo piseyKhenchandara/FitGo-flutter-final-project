@@ -1,9 +1,10 @@
-import 'package:fit_go/controllers/user_setup_controller.dart';
+
 import 'package:fit_go/data/avg_weight.dart';
 import 'package:fit_go/helpers/snackbar_helper.dart';
 import 'package:fit_go/models/enums.dart';
 import 'package:fit_go/service/user_service.dart';
 import 'package:fit_go/widgets/appbar.dart';
+import 'package:fit_go/widgets/back_next_button.dart';
 import 'package:fit_go/widgets/goal_choice.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -35,6 +36,7 @@ class _WeightAvgPageState extends State<WeightAvgPage> {
       bmi = calculatedBMI;
       compareWithAverage();
       autoSelectGoal();
+      print(bmi.toStringAsFixed(1));
     }
   }
 
@@ -93,6 +95,7 @@ class _WeightAvgPageState extends State<WeightAvgPage> {
                         ),
 
                         const SizedBox(height: 20),
+                        
 
                         // BMI Value
                         Text(
@@ -177,6 +180,23 @@ class _WeightAvgPageState extends State<WeightAvgPage> {
                           height: 200,
                           fit: BoxFit.contain,
                         ),
+                        BackNextButton(
+                          go_back: true,
+                          go_next: true,
+                          backRoute: '/setup/weight',
+                          onNext: () {
+
+                        
+                              UserService.saveBMI(bmi);         
+                              return true;
+                            
+                          
+
+                          },
+                          
+                          nextRoute: '/setup/schedule',
+                          
+                        )
                       ],
                     ),
                   ),

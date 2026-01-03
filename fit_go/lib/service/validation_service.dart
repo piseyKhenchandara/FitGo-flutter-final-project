@@ -33,4 +33,17 @@ class ValidationService {
      return null;
   }
 
+  static String? validateSchedule(List<String> ? schedule) {
+    
+    if(schedule== null || schedule.isEmpty) {
+      return 'Please select at least one day';
+    }
+    
+    if(schedule.length < 3) {
+      return 'Please select at least 3 days';
+    }
+
+    return null;
+  }
+
 }

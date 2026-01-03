@@ -38,7 +38,7 @@ class AppRouter {
       GoRoute(
         path: '/setup/weight',
         name: 'weight',
-        builder: (context, state) => WeightPage(height: state.extra as int?),
+        builder: (context, state) => WeightPage(),
       ),
       GoRoute(
         path: '/setup/user_info',
@@ -57,7 +57,7 @@ class AppRouter {
         name: 'schedule',
         builder: (context, state) => SchedulePage(),
       ),
-      
+
       GoRoute(
         path: '/homepage',
         name: 'homepage',
