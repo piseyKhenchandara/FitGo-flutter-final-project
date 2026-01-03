@@ -59,6 +59,10 @@ class UserService {
       return userSetupController.goal = choice;
   }
 
+  static void saveSchedule(List<String> schedule) {
+    userSetupController.schedule = schedule;
+  }
+
   static double? calculateBMI() {
 
     if(userSetupController.height == null || userSetupController.weight == null) {
@@ -69,6 +73,8 @@ class UserService {
 
     return bmi;
   }
+
+
 
 
 

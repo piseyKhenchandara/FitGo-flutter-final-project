@@ -1,5 +1,7 @@
 import 'package:fit_go/controllers/user_setup_controller.dart';
 import 'package:fit_go/helpers/snackbar_helper.dart';
+import 'package:fit_go/service/user_local_storage_service.dart';
+import 'package:fit_go/service/user_service.dart';
 import 'package:fit_go/service/validation_service.dart';
 import 'package:fit_go/widgets/appbar.dart';
 import 'package:fit_go/widgets/back_next_button.dart';
@@ -202,7 +204,7 @@ class _SchedulePageState extends State<SchedulePage> {
                             go_back: true,
                             go_next: true,
                             backRoute: '/setup/weight_avg',
-                            onNext: () {
+                            onNext: () async {
                               final error = ValidationService.validateSchedule(
                                 selectedDays.toList(),
                               );
@@ -213,7 +215,9 @@ class _SchedulePageState extends State<SchedulePage> {
                               }
 
                               List<String> finalSchedule = _processDays();
-                             
+                              UserService.saveSchedule(finalSchedule);
+
+                              await UserLocalStorageService.saveUserSetup();
 
                               return true;
                             },

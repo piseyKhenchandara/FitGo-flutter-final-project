@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,7 +16,7 @@ class BackNextButton extends StatelessWidget {
   final bool go_next;
   final String? backRoute;
   final String? nextRoute;
-  final bool Function()? onNext;
+  final dynamic onNext; // ✅ CHANGED: accepts both bool Function() and Future<bool> Function()
   final bool Function()? onBack;
 
   @override
@@ -33,7 +32,6 @@ class BackNextButton extends StatelessWidget {
                   label: const Text('Back'),
                   onPressed: () {
                     final canGo = onBack?.call() ?? true;
-
                     if (!canGo) return;
                     
                     if (backRoute != null) {
@@ -49,10 +47,14 @@ class BackNextButton extends StatelessWidget {
               ? ElevatedButton.icon(
                   icon: const Icon(Icons.arrow_forward),
                   label: const Text('Next'),
-                  onPressed: () {
-                    final canGo = onNext?.call() ?? true;
+                  onPressed: () async { // ✅ CHANGED: added async
+                    // ✅ HANDLE BOTH SYNC AND ASYNC
+                    final result = onNext?.call();
+                    final canGo = result is Future<bool> 
+                        ? await result 
+                        : (result ?? true);
 
-                    if(!canGo) return;
+                    if (!canGo) return;
 
                     if (nextRoute != null) {
                       context.go(nextRoute!);

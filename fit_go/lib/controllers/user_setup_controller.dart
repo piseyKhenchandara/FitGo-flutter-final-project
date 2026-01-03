@@ -24,6 +24,7 @@ class UserSetupController {
         weight_avg != null &&
         name != null &&
         age != null &&
+        goal !=null &&
         schedule !=null && schedule!.length >=3;
   }
 
@@ -49,6 +50,7 @@ class UserSetupController {
     weight = null;
     name = null;
     age = null;
+    weight_avg = null;
     profileImage = null;
     profileImageWeb = null;
     goal = null;
