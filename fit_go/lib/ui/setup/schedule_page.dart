@@ -221,7 +221,7 @@ class _SchedulePageState extends State<SchedulePage> {
 
                               return true;
                             },
-                            nextRoute: '/home',
+                            nextRoute: '/homepage',
                           ),
                         ],
                       ),

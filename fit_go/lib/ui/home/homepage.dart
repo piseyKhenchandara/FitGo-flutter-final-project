@@ -1,3 +1,5 @@
+import 'package:fit_go/controllers/user_setup_controller.dart';
+import 'package:fit_go/ui/home/workday.dart';
 import 'package:fit_go/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +11,6 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  final String name = "Ronan";
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,7 @@ class _HomepageState extends State<Homepage> {
                               ),
                             ),
                             Text(
-                              name,
+                              userSetupController.name?? "User",
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 32,
@@ -96,15 +97,16 @@ class _HomepageState extends State<Homepage> {
                             children: [
                               _buildWorkoutCard("assets/images/andrew1.png"),
                               SizedBox(width: 15),
-                              _buildWorkoutCard("assets/arms/arm1.png"),
+                              _buildWorkoutCard("assets/images/image.png"),
                               SizedBox(width: 15),
-                              _buildWorkoutCard("assets/images/andrew1.png"),
+                              _buildWorkoutCard("assets/images/ronaldo1.png"),
                             ],
                           ),
                         )
                       ],
                     ),
                   ),
+                  Workday(),
                 ],
               ),
             ),
