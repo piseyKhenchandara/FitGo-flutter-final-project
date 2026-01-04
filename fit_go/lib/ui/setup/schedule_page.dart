@@ -19,20 +19,47 @@ class _SchedulePageState extends State<SchedulePage> {
   
   Set<String> selectedDays = {};
 
-    void _handleDayChange(String day, bool? value) {
+  final List<String> allDays = [
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+    'sunday',
+  ];
+
+  void _handleDayChange(String day, bool? value) {
     setState(() {
-      if (value == true) {
-        if (day == 'everyday') {
+      if (day == 'everyday') {
+        if (value == true) {
+          // Select all days + everyday
+          selectedDays
+            ..clear()
+            ..add('everyday')
+            ..addAll(allDays);
+        } else {
+          // Unselect everything
           selectedDays.clear();
+        }
+      } else {
+        if (value == true) {
+          selectedDays.add(day);
+          selectedDays.remove('everyday');
+        } else {
+          selectedDays.remove(day);
+        }
+
+        // ✅ Auto-select everyday if all days are selected
+        if (allDays.every((d) => selectedDays.contains(d))) {
+          selectedDays.add('everyday');
         } else {
           selectedDays.remove('everyday');
         }
-        selectedDays.add(day);
-      } else {
-        selectedDays.remove(day);
       }
     });
   }
+
 
 
   List<String> _processDays() {
