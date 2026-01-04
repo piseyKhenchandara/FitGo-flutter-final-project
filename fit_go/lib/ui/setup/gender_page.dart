@@ -1,6 +1,6 @@
 import 'package:fit_go/controllers/user_setup_controller.dart';
 import 'package:fit_go/helpers/snackbar_helper.dart';
-import 'package:fit_go/service/user_service.dart';
+import 'package:fit_go/service/user_setup_service.dart';
 import 'package:fit_go/widgets/appbar.dart';
 import 'package:fit_go/widgets/back_next_button.dart';
 import 'package:fit_go/widgets/gender_widgets.dart';

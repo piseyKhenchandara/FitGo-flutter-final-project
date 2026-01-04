@@ -20,7 +20,7 @@ class _HomepageState extends State<Homepage> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(10, 30, 10, 30),
+              padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
               child: Appbar(),
             ),
             SizedBox(height: 10),
@@ -29,7 +29,7 @@ class _HomepageState extends State<Homepage> {
                 children: [
                   // Greeting Section
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -37,20 +37,13 @@ class _HomepageState extends State<Homepage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Morning",
+                              "Morning ${userSetupController.name?? 'User'}",
                               style: TextStyle(
                                 color: Colors.grey[600],
                                 fontSize: 16,
                               ),
                             ),
-                            Text(
-                              userSetupController.name?? "User",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                          
                           ],
                         ),
                         CircleAvatar(
@@ -64,8 +57,13 @@ class _HomepageState extends State<Homepage> {
             
                   // Feature Workout Section
                   Container(
-                    color: Colors.white,
                     padding: EdgeInsets.all(20),
+                    margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20)
+                      
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -119,9 +117,10 @@ class _HomepageState extends State<Homepage> {
   Widget _buildWorkoutCard(String imagePath) {
     return Container(
       width: 200,
-      height: 200,
+      height: 100,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
+       
         boxShadow: [
           BoxShadow(
             // ignore: deprecated_member_use

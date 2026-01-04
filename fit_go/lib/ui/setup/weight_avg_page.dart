@@ -2,7 +2,7 @@
 import 'package:fit_go/data/avg_weight.dart';
 import 'package:fit_go/helpers/snackbar_helper.dart';
 import 'package:fit_go/models/enums.dart';
-import 'package:fit_go/service/user_service.dart';
+import 'package:fit_go/service/user_setup_service.dart';
 import 'package:fit_go/widgets/appbar.dart';
 import 'package:fit_go/widgets/back_next_button.dart';
 import 'package:fit_go/widgets/goal_choice.dart';
