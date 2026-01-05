@@ -15,7 +15,6 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _SchedulePageState extends State<SchedulePage> {
-  
   Set<String> selectedDays = {};
 
   final List<String> allDays = [
@@ -32,13 +31,11 @@ class _SchedulePageState extends State<SchedulePage> {
     setState(() {
       if (day == 'everyday') {
         if (value == true) {
-          // Select all days + everyday
           selectedDays
             ..clear()
             ..add('everyday')
             ..addAll(allDays);
         } else {
-          // Unselect everything
           selectedDays.clear();
         }
       } else {
@@ -49,8 +46,7 @@ class _SchedulePageState extends State<SchedulePage> {
           selectedDays.remove(day);
         }
 
-        // ✅ Auto-select everyday if all days are selected
-        if (allDays.every((d) => selectedDays.contains(d))) {
+        if (allDays.every(selectedDays.contains)) {
           selectedDays.add('everyday');
         } else {
           selectedDays.remove('everyday');
@@ -59,8 +55,7 @@ class _SchedulePageState extends State<SchedulePage> {
     });
   }
 
-
-
+  /// ✅ ONLY return real workout days (no "everyday")
   List<String> _processDays() {
     if (selectedDays.contains('everyday')) {
       return [
@@ -69,11 +64,12 @@ class _SchedulePageState extends State<SchedulePage> {
         'wednesday',
         'thursday',
         'friday',
-        'saturday'
+        'saturday',
       ];
     }
-    return selectedDays.toList();
+    return selectedDays.where((d) => d != 'everyday').toList();
   }
+
 
   @override
   Widget build(BuildContext context) {

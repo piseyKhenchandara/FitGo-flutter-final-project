@@ -8,6 +8,17 @@ class UserActivity {
 
   Map<int, List<Map<String, dynamic>>> dayActivities = {};
 
+  // ✅ MATCH SchedulePage (lowercase days)
+  static const Map<String, int> weekdayIndex = {
+    'monday': 0,
+    'tuesday': 1,
+    'wednesday': 2,
+    'thursday': 3,
+    'friday': 4,
+    'saturday': 5,
+    'sunday': 6,
+  };
+
   static const Map<String, Map<String, Map<String, int>>> exerciseAllocationByGoal = {
     'stayFit': {
       'low': {'arms': 6, 'back': 5, 'legs': 7, 'shoulder': 5},
@@ -26,137 +37,102 @@ class UserActivity {
     },
   };
 
+  UserActivity({List<String>? scheduleOverride})
+      : schedule = scheduleOverride ?? userSetupController.schedule ?? [] {
+    _generateActivitiesFor30Days();
+  }
 
-  UserActivity({List<String>? scheduleOverride}) : schedule = scheduleOverride ?? userSetupController.schedule ?? [] {_generateActivitiesFor30Days();}
+  // ===================== CORE =====================
+  Set<int> _getWorkoutDays() {
+    return schedule
+        .where((d) => weekdayIndex.containsKey(d))
+        .map((d) => weekdayIndex[d]!)
+        .toSet();
+  }
 
   void _generateActivitiesFor30Days() {
     final random = Random();
-    String intensity = _getIntensity();
-    String goalKey = _getGoalKey();
-
-    // Get allocation based on goal AND intensity
+    final intensity = _getIntensity();
+    final goalKey = _getGoalKey();
     final allocation = exerciseAllocationByGoal[goalKey]?[intensity];
 
-    if(allocation == null) {
-      print('Error : No allocation found for goal = $goalKey, intensity=$intensity');
-      return;
-    }
+    if (allocation == null) return;
 
-    for(int day = 0 ; day <30 ; day++) {
+    final workoutDays = _getWorkoutDays();
+
+    for (int day = 0; day < 30; day++) {
+      final dayOfWeek = day % 7;
+
+      // ✅ Correct workout-day check
+      if (!workoutDays.contains(dayOfWeek)) continue;
 
       List<Map<String, dynamic>> dayExercises = [];
 
-      int dayOfWeek = day %7;
-      bool isWorkoutDay = dayOfWeek < schedule.length;
+      allocation.forEach((muscleType, count) {
+        final exercises =
+            activity.where((a) => a.type == muscleType).toList();
 
-      if(isWorkoutDay) {
+        for (int i = 0; i < count && exercises.isNotEmpty; i++) {
+          final ex = exercises[random.nextInt(exercises.length)];
 
-        allocation.forEach((muscleType, count) {
-          final exercisesForType = activity.where((act) => act.type == muscleType).toList();
+          dayExercises.add({
+            'id': ex.id,
+            'name': ex.name,
+            'image': ex.image,
+            'type': ex.type,
+            'reps': ex.amount,
+            'completedReps': 0,
+            'durationPerRepSeconds':
+                (ex.time.inSeconds / ex.amount).ceil(),
+            'totalDurationSeconds': ex.time.inSeconds,
+            'remainingSeconds': ex.time.inSeconds,
+            'completed': false,
+          });
+        }
+      });
 
-          if(exercisesForType.isNotEmpty) {
-            for(int i = 0 ; i < count ; i++) {
-              final selectedExercise = exercisesForType[random.nextInt(exercisesForType.length)];
-
-              final totalSeconds = selectedExercise.time.inSeconds;
-              final totalReps = selectedExercise.amount;
-              final durationPerRepSeconds = (totalSeconds/totalReps).ceil();
-
-              dayExercises.add({
-                'id' : selectedExercise.id,
-                'name' : selectedExercise.name,
-                'image' : selectedExercise.image,
-                'type' : selectedExercise.type,
-                'reps' : totalReps,
-                'completedReps' : 0,
-                'durationPerRepSeconds' : durationPerRepSeconds,
-                'totalDurationSeconds' : totalSeconds,
-                'remainingSeconds' : totalSeconds,
-                'completed' : false,
-              });
-            }
-          }
-        });
-        dayActivities[day] = dayExercises;
-      }
-
+      dayActivities[day] = dayExercises;
     }
-
-
-
   }
+
+  // ===================== HELPERS =====================
   String _getIntensity() {
-
-    if(schedule.length ==3) {
-      return 'low';
-    }
-    else if(schedule.length>=4 && schedule.length<=5) {
-      return 'medium';
-    }
-    else{
-      return 'high';
-    }
-
+    if (schedule.length == 3) return 'low';
+    if (schedule.length <= 5) return 'medium';
+    return 'high';
   }
 
-  String _getGoalKey(){
-    final goal = userSetupController.goal;
-
-    switch(goal) {
+  String _getGoalKey() {
+    switch (userSetupController.goal) {
       case GoalType.stayFit:
         return 'stayFit';
       case GoalType.gainMuscle:
         return 'gainMuscle';
       case GoalType.loseWeight:
         return 'loseWeight';
-      default : 
-        return 'stayFit';  
+      default:
+        return 'stayFit';
     }
   }
 
+  // ===================== PUBLIC =====================
   List<Map<String, dynamic>> getActivitiesForDay(int dayIndex) {
-
-    if(dayIndex < 0 || dayIndex >=30) {
-
-      return [];
-    }
+    if (dayIndex < 0 || dayIndex >= 30) return [];
     return dayActivities[dayIndex] ?? [];
-
-
   }
 
   String getTotalDurationForDay(int dayIndex) {
+    final exercises = getActivitiesForDay(dayIndex);
+    if (exercises.isEmpty) return 'Rest day';
 
-    final dayExercises = getActivitiesForDay(dayIndex);
+    final totalSeconds =
+        exercises.fold(0, (sum, a) => sum + (a['totalDurationSeconds'] as int));
 
-    if(dayExercises.isEmpty) {
-      return 'Rest day';
-    }
+    final m = totalSeconds ~/ 60;
+    final s = totalSeconds % 60;
 
-    final totalSeconds = dayExercises.fold(0,(sum, activity) => sum + (activity['totalDurationSeconds'] as int));
-
-    final minutes = totalSeconds ~/ 60;
-    final seconds = totalSeconds %60;
-
-    if(minutes == 0) {
-      return '${seconds}s';
-
-    }
-    else if(seconds == 0){
-      return '${minutes}mn';
-    }
-    else {
-      return '${minutes}m ${seconds}s';
-    }
-
-
+    if (m == 0) return '${s}s';
+    if (s == 0) return '${m}m';
+    return '${m}m ${s}s';
   }
-
-
-  
-
-  
-
-
-
 }
