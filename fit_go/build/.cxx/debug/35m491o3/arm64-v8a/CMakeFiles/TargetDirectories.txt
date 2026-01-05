@@ -1,2 +1,0 @@
-D:/CADT_course/Year 3/FundamentalOfMobileDevelopment/Project/FitGo-flutter-final-project/fit_go/build/.cxx/debug/35m491o3/arm64-v8a/CMakeFiles/edit_cache.dir
-D:/CADT_course/Year 3/FundamentalOfMobileDevelopment/Project/FitGo-flutter-final-project/fit_go/build/.cxx/debug/35m491o3/arm64-v8a/CMakeFiles/rebuild_cache.dir
