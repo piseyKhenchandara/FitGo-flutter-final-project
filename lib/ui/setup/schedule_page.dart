@@ -1,4 +1,3 @@
-import 'package:fit_go/controllers/user_setup_controller.dart';
 import 'package:fit_go/helpers/snackbar_helper.dart';
 import 'package:fit_go/service/user_local_storage_service.dart';
 import 'package:fit_go/service/user_setup_service.dart';

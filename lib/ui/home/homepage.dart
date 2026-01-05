@@ -3,7 +3,6 @@ import 'package:fit_go/service/user_local_storage_service.dart';
 import 'package:fit_go/widgets/appbar.dart';
 import 'package:fit_go/widgets/workout_day.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});

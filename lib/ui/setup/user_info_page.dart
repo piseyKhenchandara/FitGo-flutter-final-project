@@ -7,7 +7,6 @@ import 'package:fit_go/widgets/appbar.dart';
 import 'package:fit_go/widgets/back_next_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserInfoPage extends StatefulWidget {
