@@ -4,7 +4,7 @@ import 'package:fit_go/service/user_setup_service.dart';
 import 'package:fit_go/service/validation_service.dart';
 import 'package:fit_go/widgets/appbar.dart';
 import 'package:fit_go/widgets/back_next_button.dart';
-import 'package:fit_go/widgets/day_checkbox.dart'; 
+import 'package:fit_go/widgets/day_checkbox.dart';
 import 'package:flutter/material.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -55,7 +55,7 @@ class _SchedulePageState extends State<SchedulePage> {
     });
   }
 
-  /// ✅ ONLY return real workout days (no "everyday")
+  ///  ONLY return real workout days (no "everyday")
   List<String> _processDays() {
     if (selectedDays.contains('everyday')) {
       return [
@@ -69,7 +69,6 @@ class _SchedulePageState extends State<SchedulePage> {
     }
     return selectedDays.where((d) => d != 'everyday').toList();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -118,61 +117,82 @@ class _SchedulePageState extends State<SchedulePage> {
                           ),
                           const SizedBox(height: 20),
 
-                       
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                           
                               Expanded(
                                 child: Column(
                                   children: [
                                     DayCheckbox(
                                       day: 'monday',
-                                      isSelected: selectedDays.contains('monday'),
-                                      onChanged: (value) => _handleDayChange('monday', value),
+                                      isSelected: selectedDays.contains(
+                                        'monday',
+                                      ),
+                                      onChanged: (value) =>
+                                          _handleDayChange('monday', value),
                                     ),
                                     DayCheckbox(
                                       day: 'tuesday',
-                                      isSelected: selectedDays.contains('tuesday'),
-                                      onChanged: (value) => _handleDayChange('tuesday', value),
+                                      isSelected: selectedDays.contains(
+                                        'tuesday',
+                                      ),
+                                      onChanged: (value) =>
+                                          _handleDayChange('tuesday', value),
                                     ),
                                     DayCheckbox(
                                       day: 'wednesday',
-                                      isSelected: selectedDays.contains('wednesday'),
-                                      onChanged: (value) => _handleDayChange('wednesday', value),
+                                      isSelected: selectedDays.contains(
+                                        'wednesday',
+                                      ),
+                                      onChanged: (value) =>
+                                          _handleDayChange('wednesday', value),
                                     ),
                                     DayCheckbox(
                                       day: 'thursday',
-                                      isSelected: selectedDays.contains('thursday'),
-                                      onChanged: (value) => _handleDayChange('thursday', value),
+                                      isSelected: selectedDays.contains(
+                                        'thursday',
+                                      ),
+                                      onChanged: (value) =>
+                                          _handleDayChange('thursday', value),
                                     ),
                                   ],
                                 ),
                               ),
 
-                         
                               Expanded(
                                 child: Column(
                                   children: [
                                     DayCheckbox(
                                       day: 'friday',
-                                      isSelected: selectedDays.contains('friday'),
-                                      onChanged: (value) => _handleDayChange('friday', value),
+                                      isSelected: selectedDays.contains(
+                                        'friday',
+                                      ),
+                                      onChanged: (value) =>
+                                          _handleDayChange('friday', value),
                                     ),
                                     DayCheckbox(
                                       day: 'saturday',
-                                      isSelected: selectedDays.contains('saturday'),
-                                      onChanged: (value) => _handleDayChange('saturday', value),
+                                      isSelected: selectedDays.contains(
+                                        'saturday',
+                                      ),
+                                      onChanged: (value) =>
+                                          _handleDayChange('saturday', value),
                                     ),
                                     DayCheckbox(
                                       day: 'sunday',
-                                      isSelected: selectedDays.contains('sunday'),
-                                      onChanged: (value) => _handleDayChange('sunday', value),
+                                      isSelected: selectedDays.contains(
+                                        'sunday',
+                                      ),
+                                      onChanged: (value) =>
+                                          _handleDayChange('sunday', value),
                                     ),
                                     DayCheckbox(
                                       day: 'everyday',
-                                      isSelected: selectedDays.contains('everyday'),
-                                      onChanged: (value) => _handleDayChange('everyday', value),
+                                      isSelected: selectedDays.contains(
+                                        'everyday',
+                                      ),
+                                      onChanged: (value) =>
+                                          _handleDayChange('everyday', value),
                                     ),
                                   ],
                                 ),
@@ -182,7 +202,6 @@ class _SchedulePageState extends State<SchedulePage> {
 
                           const SizedBox(height: 30),
 
-                          
                           Container(
                             width: double.infinity,
                             padding: EdgeInsets.all(15),
@@ -257,7 +276,4 @@ class _SchedulePageState extends State<SchedulePage> {
       ),
     );
   }
-
-
-
 }

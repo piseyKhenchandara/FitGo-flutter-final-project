@@ -1,3 +1,4 @@
+import 'package:fit_go/ui/home/workout_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_go/data/gym_data/user_activity.dart';
 
@@ -37,6 +38,20 @@ class _WorkoutDayState extends State<WorkoutDay> {
           borderRadius: BorderRadius.circular(15),
           onTap: () {
             setState(() => selectedDay = dayNumber);
+            
+            // Navigate to workout detail page
+            Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WorkoutDetailPage(
+                dayNumber: dayNumber,
+                exercises: dayActivities,
+                duration: duration,
+                userActivity: userActivity,  
+                dayIndex: index,              
+              ),
+            ),
+          );
           },
           child: Container(
             margin: const EdgeInsets.only(bottom: 12),
@@ -45,14 +60,15 @@ class _WorkoutDayState extends State<WorkoutDay> {
               gradient: isSelected
                   ? LinearGradient(
                       colors: [
-                        Colors.blue.shade500,
+                        Colors.black,
                         Colors.blue.shade400
                       ],
+                      
                     )
                   : isRest
                       ? LinearGradient(
                           colors: [
-                            Colors.grey.shade400,
+                            Colors.black12,
                             Colors.grey.shade300
                           ],
                         )
@@ -89,7 +105,7 @@ class _WorkoutDayState extends State<WorkoutDay> {
                         color: isSelected
                             ? Colors.white
                             : isRest
-                                ? Colors.grey.shade800
+                                ? Colors.black12
                                 : Colors.black,
                       ),
                     ),
@@ -113,7 +129,7 @@ class _WorkoutDayState extends State<WorkoutDay> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
-                    color: isSelected || isRest
+                    color: isSelected
                         ? Colors.white
                         : Colors.blue.shade50,
                     borderRadius: BorderRadius.circular(10),
@@ -124,9 +140,9 @@ class _WorkoutDayState extends State<WorkoutDay> {
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: isSelected
-                          ? Colors.white
+                          ? Colors.black
                           : isRest
-                              ? Colors.grey.shade800
+                              ? Colors.black12
                               : Colors.blue.shade600,
                     ),
                   ),
