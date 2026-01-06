@@ -8,7 +8,7 @@ class UserActivity {
 
   Map<int, List<Map<String, dynamic>>> dayActivities = {};
 
-  // ✅ MATCH SchedulePage (lowercase days)
+  //  MATCH SchedulePage (lowercase days)
   static const Map<String, int> weekdayIndex = {
     'monday': 0,
     'tuesday': 1,
@@ -19,7 +19,8 @@ class UserActivity {
     'sunday': 6,
   };
 
-  static const Map<String, Map<String, Map<String, int>>> exerciseAllocationByGoal = {
+  static const Map<String, Map<String, Map<String, int>>>
+  exerciseAllocationByGoal = {
     'stayFit': {
       'low': {'arms': 6, 'back': 5, 'legs': 7, 'shoulder': 5},
       'medium': {'arms': 5, 'back': 4, 'legs': 6, 'shoulder': 4},
@@ -38,7 +39,7 @@ class UserActivity {
   };
 
   UserActivity({List<String>? scheduleOverride})
-      : schedule = scheduleOverride ?? userSetupController.schedule ?? [] {
+    : schedule = scheduleOverride ?? userSetupController.schedule ?? [] {
     _generateActivitiesFor30Days();
   }
 
@@ -63,14 +64,13 @@ class UserActivity {
     for (int day = 0; day < 30; day++) {
       final dayOfWeek = day % 7;
 
-      // ✅ Correct workout-day check
+      //  Correct workout-day check
       if (!workoutDays.contains(dayOfWeek)) continue;
 
       List<Map<String, dynamic>> dayExercises = [];
 
       allocation.forEach((muscleType, count) {
-        final exercises =
-            activity.where((a) => a.type == muscleType).toList();
+        final exercises = activity.where((a) => a.type == muscleType).toList();
 
         for (int i = 0; i < count && exercises.isNotEmpty; i++) {
           final ex = exercises[random.nextInt(exercises.length)];
@@ -82,8 +82,7 @@ class UserActivity {
             'type': ex.type,
             'reps': ex.amount,
             'completedReps': 0,
-            'durationPerRepSeconds':
-                (ex.time.inSeconds / ex.amount).ceil(),
+            'durationPerRepSeconds': (ex.time.inSeconds / ex.amount).ceil(),
             'totalDurationSeconds': ex.time.inSeconds,
             'remainingSeconds': ex.time.inSeconds,
             'completed': false,
@@ -125,8 +124,10 @@ class UserActivity {
     final exercises = getActivitiesForDay(dayIndex);
     if (exercises.isEmpty) return 'Rest day';
 
-    final totalSeconds =
-        exercises.fold(0, (sum, a) => sum + (a['totalDurationSeconds'] as int));
+    final totalSeconds = exercises.fold(
+      0,
+      (sum, a) => sum + (a['totalDurationSeconds'] as int),
+    );
 
     final m = totalSeconds ~/ 60;
     final s = totalSeconds % 60;
@@ -134,5 +135,69 @@ class UserActivity {
     if (m == 0) return '${s}s';
     if (s == 0) return '${m}m';
     return '${m}m ${s}s';
+  }
+
+  /// Complete a rep for an activity on a specific day
+  void completeRep(int dayIndex, int activityIndex) {
+    final dayExercises = getActivitiesForDay(dayIndex);
+
+    if (activityIndex >= 0 && activityIndex < dayExercises.length) {
+      final activity = dayExercises[activityIndex];
+      final completedReps = activity['completedReps'] as int;
+      final totalReps = activity['reps'] as int;
+
+      if (completedReps < totalReps) {
+        activity['completedReps'] = completedReps + 1;
+        activity['remainingSeconds'] =
+            (totalReps - (completedReps + 1)) *
+            (activity['durationPerRepSeconds'] as int);
+
+        if (completedReps + 1 == totalReps) {
+          activity['completed'] = true;
+        }
+      }
+    }
+  }
+
+  /// Get formatted time remaining for an activity (MM:SS format)
+  String getFormattedTime(int dayIndex, int activityIndex) {
+    final dayExercises = getActivitiesForDay(dayIndex);
+
+    if (activityIndex < 0 || activityIndex >= dayExercises.length) {
+      return '0:00';
+    }
+
+    final seconds = dayExercises[activityIndex]['remainingSeconds'] as int;
+    final minutes = seconds ~/ 60;
+    final secs = seconds % 60;
+    return '$minutes:${secs.toString().padLeft(2, '0')}';
+  }
+
+  /// Get completion percentage for a specific day
+  double getCompletionPercentageForDay(int dayIndex) {
+    final dayExercises = getActivitiesForDay(dayIndex);
+
+    if (dayExercises.isEmpty) return 0.0;
+
+    final completed = dayExercises.where((a) => a['completed'] == true).length;
+    return (completed / dayExercises.length) * 100;
+  }
+
+  /// Get total reps to complete for a specific day
+  int getTotalRepsForDay(int dayIndex) {
+    final dayExercises = getActivitiesForDay(dayIndex);
+    return dayExercises.fold(
+      0,
+      (sum, activity) => sum + (activity['reps'] as int),
+    );
+  }
+
+  /// Get completed reps for a specific day
+  int getCompletedRepsForDay(int dayIndex) {
+    final dayExercises = getActivitiesForDay(dayIndex);
+    return dayExercises.fold(
+      0,
+      (sum, activity) => sum + (activity['completedReps'] as int),
+    );
   }
 }

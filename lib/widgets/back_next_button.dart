@@ -16,7 +16,8 @@ class BackNextButton extends StatelessWidget {
   final bool go_next;
   final String? backRoute;
   final String? nextRoute;
-  final dynamic onNext; // ✅ CHANGED: accepts both bool Function() and Future<bool> Function()
+  final dynamic
+  onNext; //  CHANGED: accepts both bool Function() and Future<bool> Function()
   final bool Function()? onBack;
 
   @override
@@ -33,7 +34,7 @@ class BackNextButton extends StatelessWidget {
                   onPressed: () {
                     final canGo = onBack?.call() ?? true;
                     if (!canGo) return;
-                    
+
                     if (backRoute != null) {
                       context.go(backRoute!);
                     } else {
@@ -47,11 +48,12 @@ class BackNextButton extends StatelessWidget {
               ? ElevatedButton.icon(
                   icon: const Icon(Icons.arrow_forward),
                   label: const Text('Next'),
-                  onPressed: () async { // ✅ CHANGED: added async
-                    // ✅ HANDLE BOTH SYNC AND ASYNC
+                  onPressed: () async {
+                    //  CHANGED: added async
+                    //  HANDLE BOTH SYNC AND ASYNC
                     final result = onNext?.call();
-                    final canGo = result is Future<bool> 
-                        ? await result 
+                    final canGo = result is Future<bool>
+                        ? await result
                         : (result ?? true);
 
                     if (!canGo) return;
