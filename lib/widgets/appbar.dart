@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
-class Appbar extends StatelessWidget {
+class Appbar extends StatelessWidget implements PreferredSizeWidget {
   const Appbar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return 
-      Row(
+    return AppBar(
+      automaticallyImplyLeading: false,
+      backgroundColor: Colors.blue[400],  
+      elevation: 0,  
+      title: Row(
         children: [
           ClipOval(
             child: Image.asset(
@@ -17,7 +20,7 @@ class Appbar extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Text(
+          const Text(
             'Fit GO',
             style: TextStyle(
               color: Colors.white,
@@ -26,7 +29,10 @@ class Appbar extends StatelessWidget {
             ),
           ),
         ],
-      );
-    
+      ),
+    );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

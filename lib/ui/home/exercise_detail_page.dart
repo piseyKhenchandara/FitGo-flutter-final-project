@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:fit_go/data/gym_data/user_activity.dart';
+import 'package:fit_go/widgets/appbar.dart';
+import 'package:fit_go/widgets/homepage_header.dart';
 import 'package:flutter/material.dart';
 
 class ExerciseDetailPage extends StatefulWidget {
@@ -112,160 +114,176 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
     final exercises = widget.userActivity.getActivitiesForDay(widget.dayIndex);
     
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      body: SafeArea(
-        child: Center(
-          child: Container(
-            margin: const EdgeInsets.all(20),
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
-                ),
-              ],
+      appBar: Appbar(),
+      body: Container(
+        color: Colors.lightBlue,
+        child: Column(
+          children: [
+            
+            HomepageHeader(
+              dayNumber: widget.dayIndex + 1,
+              duration: widget.userActivity.getTotalDurationForDay(widget.dayIndex),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Navigation Header with Exercise Name
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Left Arrow
-                    IconButton(
-                      icon: const Icon(Icons.chevron_left, size: 28),
-                      onPressed: currentExerciseIndex > 0 
-                          ? goToPreviousExercise 
-                          : null,
-                      color: currentExerciseIndex > 0 
-                          ? Colors.black 
-                          : Colors.grey[300],
-                    ),
-                    
-                    // Exercise Name
-                    Expanded(
-                      child: Text(
-                        exercise['name'],
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+            
+            const SizedBox(height: 16),
+            
+            // Exercise Card
+            Expanded(
+              child: Center(
+                child: Container(
+                  margin: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
                       ),
-                    ),
-                    
-                    // Right Arrow
-                    IconButton(
-                      icon: const Icon(Icons.chevron_right, size: 28),
-                      onPressed: currentExerciseIndex < exercises.length - 1 
-                          ? goToNextExercise 
-                          : null,
-                      color: currentExerciseIndex < exercises.length - 1 
-                          ? Colors.black 
-                          : Colors.grey[300],
-                    ),
-                  ],
-                ),
-                
-                const SizedBox(height: 30),
-
-                // Exercise Image
-                exercise['image'] != null
-                    ? Image.network(
-                        exercise['image'],
-                        height: 120,
-                        fit: BoxFit.contain,
-                        errorBuilder: (_, __, ___) => 
-                            const Icon(Icons.fitness_center, size: 100, color: Colors.grey),
-                      )
-                    : const Icon(Icons.fitness_center, size: 100, color: Colors.grey),
-                
-                const SizedBox(height: 40),
-
-                // Reps Counter (Big Red Number)
-                Text(
-                  '${exercise['reps'] - exercise['completedReps']}',
-                  style: const TextStyle(
-                    fontSize: 80,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFFF3B3B),
-                    height: 1.0,
+                    ],
                   ),
-                ),
-                
-                const SizedBox(height: 8),
-                
-                // "Timer" Label
-                Text(
-                  'Timer',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                
-                const SizedBox(height: 30),
-
-                // Time Display and Start Button Row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Time Display
-                    Text(
-                      getFormattedTime(),
-                      style: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                    ),
-                    
-                    const SizedBox(width: 20),
-                    
-                    // Start/Pause Button
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF00E676).withOpacity(0.3),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Navigation Header with Exercise Name
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Left Arrow
+                          IconButton(
+                            icon: const Icon(Icons.chevron_left, size: 28),
+                            onPressed: currentExerciseIndex > 0 
+                                ? goToPreviousExercise 
+                                : null,
+                            color: currentExerciseIndex > 0 
+                                ? Colors.black 
+                                : Colors.grey[300],
+                          ),
+                          
+                          // Exercise Name
+                          Expanded(
+                            child: Text(
+                              exercise['name'],
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          
+                          // Right Arrow
+                          IconButton(
+                            icon: const Icon(Icons.chevron_right, size: 28),
+                            onPressed: currentExerciseIndex < exercises.length - 1 
+                                ? goToNextExercise 
+                                : null,
+                            color: currentExerciseIndex < exercises.length - 1 
+                                ? Colors.black 
+                                : Colors.grey[300],
                           ),
                         ],
                       ),
-                      child: ElevatedButton(
-                        onPressed: isTimerRunning ? pauseTimer : startTimer,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF00E676),
-                          foregroundColor: Colors.white,
-                          shape: const CircleBorder(),
-                          padding: const EdgeInsets.all(20),
-                          elevation: 0,
-                        ),
-                        child: Text(
-                          isTimerRunning ? 'Pause' : 'Start',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      
+                      const SizedBox(height: 30),
+
+                      // Exercise Image
+                      exercise['image'] != null
+                          ? Image.network(
+                              exercise['image'],
+                              height: 120,
+                              fit: BoxFit.contain,
+                              errorBuilder: (_, __, ___) => 
+                                  const Icon(Icons.fitness_center, size: 100, color: Colors.grey),
+                            )
+                          : const Icon(Icons.fitness_center, size: 100, color: Colors.grey),
+                      
+                      const SizedBox(height: 40),
+
+                      // Reps Counter (Big Red Number)
+                      Text(
+                        '${exercise['reps'] - exercise['completedReps']}',
+                        style: const TextStyle(
+                          fontSize: 80,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFFF3B3B),
+                          height: 1.0,
                         ),
                       ),
-                    ),
-                  ],
+                      
+                      const SizedBox(height: 8),
+                      
+                      // "Timer" Label
+                      Text(
+                        'Timer',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      
+                      const SizedBox(height: 30),
+
+                      // Time Display and Start Button Row
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Time Display
+                          Text(
+                            getFormattedTime(),
+                            style: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
+                          
+                          const SizedBox(width: 20),
+                          
+                          // Start/Pause Button
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(0xFF00E676).withOpacity(0.3),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: ElevatedButton(
+                              onPressed: isTimerRunning ? pauseTimer : startTimer,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF00E676),
+                                foregroundColor: Colors.white,
+                                shape: const CircleBorder(),
+                                padding: const EdgeInsets.all(20),
+                                elevation: 0,
+                              ),
+                              child: Text(
+                                isTimerRunning ? 'Pause' : 'Start',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      
+                      const SizedBox(height: 20),
+                    ],
+                  ),
                 ),
-                
-                const SizedBox(height: 20),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

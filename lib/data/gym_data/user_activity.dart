@@ -8,7 +8,7 @@ class UserActivity {
 
   Map<int, List<Map<String, dynamic>>> dayActivities = {};
 
-  //  MATCH SchedulePage (lowercase days)
+
   static const Map<String, int> weekdayIndex = {
     'monday': 0,
     'tuesday': 1,
@@ -43,7 +43,7 @@ class UserActivity {
     _generateActivitiesFor30Days();
   }
 
-  // ===================== CORE =====================
+
   Set<int> _getWorkoutDays() {
     return schedule
         .where((d) => weekdayIndex.containsKey(d))
