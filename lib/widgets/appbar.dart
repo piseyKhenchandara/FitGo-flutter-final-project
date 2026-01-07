@@ -11,10 +11,16 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: AppBar(
-          automaticallyImplyLeading: false,
+         
           backgroundColor: Colors.white.withOpacity(0.1),
           elevation: 0,
           surfaceTintColor: Colors.transparent,
+          leading: Navigator.canPop(context)
+              ? IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () => Navigator.pop(context),
+                )
+              : null,
           title: Row(
             children: [
               ClipOval(

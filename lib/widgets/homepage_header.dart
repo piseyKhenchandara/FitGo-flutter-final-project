@@ -63,18 +63,12 @@ class HomepageHeader extends StatelessWidget {
                 value: '$totalExercises',
               ),
               
+              SizedBox(width: 20,),
               // Duration
               _buildStatCard(
                 icon: Icons.timer,
                 label: 'Duration',
                 value: duration,
-              ),
-              
-              // Completion percentage
-              _buildStatCard(
-                icon: Icons.check_circle,
-                label: 'Completed',
-                value: '$percentage%',
               ),
             ],
           ),
@@ -88,36 +82,38 @@ class HomepageHeader extends StatelessWidget {
     required String label,
     required String value,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.3),
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.3),
+          ),
         ),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: Colors.white, size: 28),
-          SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+        child: Column(
+          children: [
+            Icon(icon, color: Colors.white, size: 28),
+            SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.white.withOpacity(0.9),
+            SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.white.withOpacity(0.9),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

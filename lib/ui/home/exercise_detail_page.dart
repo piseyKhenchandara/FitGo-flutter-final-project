@@ -149,14 +149,26 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
     final exercises = widget.userActivity.getActivitiesForDay(widget.dayIndex);
     
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 12, 39, 135),
       appBar: Appbar(),
       body: Container(
-        color: Colors.lightBlue,
+        decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color.fromARGB(255, 12, 39, 135), // Purple
+                    Color(0xFF1976D2), // Blue
+                    Color(0xFF26C6DA), // Cyan
+                  ],
+                ),
+              ),
         child: Column(
           children: [
             
             HomepageHeader(
               dayNumber: widget.dayIndex + 1,
+              totalExercises: exercises.length,
               duration: widget.userActivity.getTotalDurationForDay(widget.dayIndex),
             ),
             
