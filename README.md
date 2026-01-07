@@ -18,10 +18,12 @@ This project is created as the **final project for the Frontend (Flutter) course
 ### App Demo
 
 <div align="center">
-  <img src="gif/homepage.gif" alt="Homepage" width="200"/>
-  <img src="gif/schedule.gif" alt="Schedule" width="200"/>
-  <img src="gif/day_exercise.gif" alt="Daily Exercises" width="200"/>
-  <img src="gif/each_exercise.gif" alt="Exercise Details" width="200"/>
+
+  <img src="assets/gif/homepage.gif" alt="Homepage" width="200"/>
+  <img src="assets/gif/schedule.gif" alt="Schedule" width="200"/>
+  <img src="assets/gif/day_exercise.gif" alt="Daily Exercises" width="200"/>
+  <img src="assets/gif/each_exercise.gif" alt="Exercise Details" width="200"/>
+
 </div>
 
 ---
@@ -179,4 +181,10 @@ flutter run
 
 ## License
 
+<<<<<<< HEAD
 Educational project for Flutter course final project.
+=======
+Educational project for Flutter course final project.
+
+
+>>>>>>> d7de37f (Update README.md)
