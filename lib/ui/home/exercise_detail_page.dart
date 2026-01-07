@@ -25,6 +25,8 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
   Timer? timer;
   bool isTimerRunning = false;
   int currentExerciseIndex = 0;
+  int originalDuration = 0;
+  static const int secondsPerRep = 3; // 3 seconds per rep
 
   @override
   void initState() {
@@ -37,6 +39,15 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
     final exercises = widget.userActivity.getActivitiesForDay(widget.dayIndex);
     if (currentExerciseIndex >= 0 && currentExerciseIndex < exercises.length) {
       exercise = exercises[currentExerciseIndex];
+      
+      // Calculate total duration: remaining reps × 3 seconds
+      int remainingReps = (exercise['reps'] ?? 0) - (exercise['completedReps'] ?? 0);
+      originalDuration = remainingReps * secondsPerRep;
+      
+      // Set remainingSeconds if not already set
+      if (exercise['remainingSeconds'] == null || exercise['remainingSeconds'] == 0) {
+        exercise['remainingSeconds'] = originalDuration;
+      }
     }
   }
 
@@ -53,12 +64,33 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
         setState(() {
           exercise['remainingSeconds']--;
           
-          // Auto complete rep when time reaches 0
+          // Check if we completed a rep (every 3 seconds)
+          int remainingReps = (exercise['reps'] ?? 0) - (exercise['completedReps'] ?? 0);
+          int expectedSeconds = remainingReps * secondsPerRep;
+          
+          // If we've counted down 3 seconds, complete a rep
+          if (exercise['remainingSeconds'] > 0 && 
+              exercise['remainingSeconds'] == expectedSeconds - secondsPerRep) {
+            completeRep();
+          }
+          
+          // Auto complete when time reaches 0
           if (exercise['remainingSeconds'] == 0) {
             completeRep();
+            pauseTimer();
           }
         });
       }
+    });
+  }
+
+  void restartTimer() {
+    pauseTimer();
+    setState(() {
+      // Recalculate duration based on remaining reps
+      int remainingReps = (exercise['reps'] ?? 0) - (exercise['completedReps'] ?? 0);
+      originalDuration = remainingReps * secondsPerRep;
+      exercise['remainingSeconds'] = originalDuration;
     });
   }
 
@@ -100,7 +132,10 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
   }
 
   String getFormattedTime() {
-    return widget.userActivity.getFormattedTime(widget.dayIndex, currentExerciseIndex);
+    int seconds = exercise['remainingSeconds'] ?? 0;
+    int minutes = seconds ~/ 60;
+    int secs = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -127,7 +162,7 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
             
             const SizedBox(height: 16),
             
-            // Exercise Card
+         
             Expanded(
               child: Center(
                 child: Container(
@@ -147,7 +182,7 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Navigation Header with Exercise Name
+                     
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -162,10 +197,10 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                                 : Colors.grey[300],
                           ),
                           
-                          // Exercise Name
+                         
                           Expanded(
                             child: Text(
-                              exercise['name'],
+                              exercise['name'] ?? 'Exercise',
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 fontSize: 18,
@@ -175,7 +210,7 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                             ),
                           ),
                           
-                          // Right Arrow
+                          
                           IconButton(
                             icon: const Icon(Icons.chevron_right, size: 28),
                             onPressed: currentExerciseIndex < exercises.length - 1 
@@ -190,7 +225,6 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                       
                       const SizedBox(height: 30),
 
-                      // Exercise Image
                       exercise['image'] != null
                           ? Image.network(
                               exercise['image'],
@@ -203,9 +237,9 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                       
                       const SizedBox(height: 40),
 
-                      // Reps Counter (Big Red Number)
+                     
                       Text(
-                        '${exercise['reps'] - exercise['completedReps']}',
+                        '${(exercise['reps'] ?? 0) - (exercise['completedReps'] ?? 0)}',
                         style: const TextStyle(
                           fontSize: 80,
                           fontWeight: FontWeight.bold,
@@ -216,9 +250,9 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                       
                       const SizedBox(height: 8),
                       
-                      // "Timer" Label
+            
                       Text(
-                        'Timer',
+                        'Reps Remaining (3s each)',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey[600],
@@ -228,11 +262,11 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                       
                       const SizedBox(height: 30),
 
-                      // Time Display and Start Button Row
+                    
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // Time Display
+                        
                           Text(
                             getFormattedTime(),
                             style: const TextStyle(
@@ -244,35 +278,44 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                           
                           const SizedBox(width: 20),
                           
-                          // Start/Pause Button
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color(0xFF00E676).withOpacity(0.3),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
+                        
+                          Row(
+                            children: [
+                              ElevatedButton(
+                                onPressed: isTimerRunning ? pauseTimer : startTimer,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF00E676),
+                                  foregroundColor: Colors.white,
+                                  shape: const CircleBorder(),
+                                  padding: const EdgeInsets.all(20),
+                                  elevation: 0,
                                 ),
-                              ],
-                            ),
-                            child: ElevatedButton(
-                              onPressed: isTimerRunning ? pauseTimer : startTimer,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF00E676),
-                                foregroundColor: Colors.white,
-                                shape: const CircleBorder(),
-                                padding: const EdgeInsets.all(20),
-                                elevation: 0,
-                              ),
-                              child: Text(
-                                isTimerRunning ? 'Pause' : 'Start',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                child: Text(
+                                  isTimerRunning ? 'Pause' : 'Start',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
+                              
+                              const SizedBox(width: 10),
+                              
+                              ElevatedButton(
+                                onPressed: restartTimer,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.orange,
+                                  foregroundColor: Colors.white,
+                                  shape: const CircleBorder(),
+                                  padding: const EdgeInsets.all(20),
+                                  elevation: 0,
+                                ),
+                                child: const Icon(
+                                  Icons.refresh,
+                                  size: 24,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
