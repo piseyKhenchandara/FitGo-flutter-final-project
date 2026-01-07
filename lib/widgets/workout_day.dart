@@ -47,43 +47,69 @@ class _WorkoutDayState extends State<WorkoutDay> {
               ),
             );
           },
-
           child: Container(
-            padding: EdgeInsets.all(10),
-            margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+            padding: EdgeInsets.all(16),
+            margin: EdgeInsets.fromLTRB(20, 0, 20, 12),
             decoration: BoxDecoration(
-              color: isRest ? null : Colors.white,
+              gradient: isRest
+                  ? null
+                  : LinearGradient(
+                      colors: [
+                        Colors.white.withOpacity(0.5),
+                        Colors.white.withOpacity(0.5),
+                      ],
+                    ),
+              color: isRest ? Colors.white.withOpacity(0.1) : null,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.3), 
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1), 
+                  blurRadius: 8, // Added missing properties
+                  offset: Offset(0, 4),
+                ),
+              ],
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  children: [
-                    Text(
+                Expanded( 
+                  child: ListTile(
+                    contentPadding: EdgeInsets.zero, 
+                    leading: Icon(
+                      Icons.fitness_center,
+                      color: isRest ? Colors.grey : Colors.black,
+                      size: 30,
+                    ),
+                    title: Text(
                       'Day ${dayNumber}',
                       style: TextStyle(
-                        color: isRest ? null : Colors.black,
+                        color: isRest ? Colors.grey : Colors.black,
                         fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
+                    subtitle: Text(
                       isRest ? "Rest" : "Workout",
-                      style: TextStyle(color: isRest ? null : Colors.black54),
+                      style: TextStyle(
+                        color: isRest ? Colors.grey : Colors.white70,
+                      ),
                     ),
-                  ],
+                  ),
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: isRest ? Colors.grey.shade200 : Colors.blue.shade200,
+                    color: isRest ? Colors.grey.shade200 : Colors.blue.shade400,
                     borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.white.withOpacity(0.8)),
                   ),
                   child: Text(
                     duration,
                     style: TextStyle(
-                      color: isRest ? Colors.black54 : Colors.black87,
+                      color: isRest ? Colors.black54 : Colors.white,
                     ),
                   ),
                 ),

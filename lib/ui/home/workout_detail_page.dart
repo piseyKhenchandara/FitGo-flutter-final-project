@@ -56,6 +56,7 @@ Widget build(BuildContext context) {
                       final exercise = exercises[index];
                       return Card(
                         margin: const EdgeInsets.only(bottom: 12),
+                        
                         child: ListTile(
                           onTap: () {
                             Navigator.push(

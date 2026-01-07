@@ -25,7 +25,7 @@ class _HomepageState extends State<Homepage> {
     try {
       // Load data from JSON file
       await UserLocalStorageService.loadUserSetup();
-      
+
       setState(() {
         greeting = _getGreeting();
         isLoading = false;
@@ -61,9 +61,7 @@ class _HomepageState extends State<Homepage> {
         body: Container(
           color: Colors.blue[400],
           child: const Center(
-            child: CircularProgressIndicator(
-              color: Colors.white,
-            ),
+            child: CircularProgressIndicator(color: Colors.white),
           ),
         ),
       );
@@ -71,7 +69,17 @@ class _HomepageState extends State<Homepage> {
 
     return Scaffold(
       body: Container(
-        color: Colors.blue[400],
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromARGB(255, 12, 39, 135), // Purple
+              Color(0xFF1976D2), // Blue
+              Color(0xFF26C6DA), // Cyan
+            ],
+          ),
+        ),
         child: Column(
           children: [
             Padding(
@@ -93,7 +101,7 @@ class _HomepageState extends State<Homepage> {
                       Text(
                         "$greeting : ${userSetupController.name ?? 'User'}",
                         style: const TextStyle(
-                          color: Colors.black,
+                          color: Colors.white70,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -117,8 +125,9 @@ class _HomepageState extends State<Homepage> {
               padding: const EdgeInsets.all(20),
               margin: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.white.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.white.withOpacity(0.3)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,6 +140,7 @@ class _HomepageState extends State<Homepage> {
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
+                          color: Colors.white
                         ),
                       ),
                       Text(
@@ -163,9 +173,7 @@ class _HomepageState extends State<Homepage> {
             const SizedBox(height: 10),
 
             // Workout Days List
-            Expanded(
-              child: WorkoutDay(),
-            ),
+            Expanded(child: WorkoutDay()),
           ],
         ),
       ),
