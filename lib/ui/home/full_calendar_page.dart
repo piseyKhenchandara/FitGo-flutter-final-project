@@ -38,7 +38,6 @@ class _FullCalendarPageState extends State<FullCalendarPage> {
   }
 
   List<DateTime> _getDaysInMonth(DateTime month) {
-    final first = DateTime(month.year, month.month, 1);
     final last = DateTime(month.year, month.month + 1, 0);
     final daysInMonth = last.day;
     return List.generate(
