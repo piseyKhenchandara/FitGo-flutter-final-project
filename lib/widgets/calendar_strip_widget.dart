@@ -43,7 +43,7 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
   }
 
   bool _isScheduledWorkoutDay(DateTime date) {
-    // Map weekday (1=Monday, 7=Sunday) to schedule names
+ 
     final dayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     final dayName = dayNames[date.weekday - 1];
     
@@ -54,11 +54,11 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
   }
 
   bool _isWorkoutScheduledForDay(DateTime date) {
-    // Get the day name (monday, tuesday, etc.)
+    
     final dayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     final dayName = dayNames[date.weekday - 1];
     
-    // Check if this day is in user's workout schedule
+
     return UserActivity.weekdayIndex.keys.contains(dayName) && 
         UserActivity.weekdayIndex[dayName] != null;
   }
@@ -67,7 +67,7 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
     final dayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     final dayName = dayNames[date.weekday - 1];
     
-    // Check if user selected this day as a workout day
+
     return UserActivity.weekdayIndex.containsKey(dayName);
   }
 
