@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:fit_go/ui/home/exercise_detail_page.dart';
 import 'package:fit_go/widgets/appbar.dart';
 import 'package:fit_go/widgets/homepage_header.dart';
+import 'package:fit_go/widgets/rest_day_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_go/data/gym_data/user_activity.dart';
 
@@ -28,12 +29,7 @@ Widget build(BuildContext context) {
     
     appBar: Appbar(),
     body: exercises.isEmpty
-        ? Center(
-            child: Text(
-              'Rest Day',
-              style: TextStyle(fontSize: 24, color: Colors.grey),
-            ),
-          )
+        ? RestDayWidget()
         : Container(
             color: Colors.lightBlue,
             
