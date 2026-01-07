@@ -34,11 +34,10 @@ class _FullCalendarPageState extends State<FullCalendarPage> {
       'sunday'
     ];
     final dayName = dayNames[date.weekday - 1];
-    return UserActivity.weekdayIndex.containsKey(dayName);
+    return widget.userActivity.schedule.contains(dayName);
   }
 
   List<DateTime> _getDaysInMonth(DateTime month) {
-    final first = DateTime(month.year, month.month, 1);
     final last = DateTime(month.year, month.month + 1, 0);
     final daysInMonth = last.day;
     return List.generate(
@@ -60,6 +59,7 @@ class _FullCalendarPageState extends State<FullCalendarPage> {
   Widget build(BuildContext context) {
     final calendarDays = _getCalendarDays(displayMonth);
     final isToday = DateTime.now();
+    final monthName = _getMonthName(displayMonth.month);
 
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 12, 39, 135),
@@ -78,131 +78,183 @@ class _FullCalendarPageState extends State<FullCalendarPage> {
         ),
         child: Column(
           children: [
+            // Header with title and navigation
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Workout Schedule',
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '$monthName ${displayMonth.year}',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white.withOpacity(0.8),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             // Month Navigation
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        displayMonth = DateTime(displayMonth.year, displayMonth.month - 1);
-                      });
-                    },
-                    icon: const Icon(Icons.arrow_left, color: Colors.white, size: 28),
-                  ),
-                  Text(
-                    "${displayMonth.year}-${displayMonth.month.toString().padLeft(2, '0')}",
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          displayMonth = DateTime(displayMonth.year, displayMonth.month - 1);
+                        });
+                      },
+                      icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+                      splashColor: Colors.white.withOpacity(0.2),
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        displayMonth = DateTime(displayMonth.year, displayMonth.month + 1);
-                      });
-                    },
-                    icon: const Icon(Icons.arrow_right, color: Colors.white, size: 28),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: Text(
+                      "${displayMonth.month.toString().padLeft(2, '0')}/${displayMonth.year}",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          displayMonth = DateTime(displayMonth.year, displayMonth.month + 1);
+                        });
+                      },
+                      icon: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20),
+                      splashColor: Colors.white.withOpacity(0.2),
+                    ),
                   ),
                 ],
               ),
             ),
 
-            // Day headers
+            const SizedBox(height: 15),
+
+            // Day headers with better styling
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: const [
-                  Text('Mon', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  Text('Tue', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  Text('Wed', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  Text('Thu', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  Text('Fri', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  Text('Sat', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  Text('Sun', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  _DayHeader('Mon'),
+                  _DayHeader('Tue'),
+                  _DayHeader('Wed'),
+                  _DayHeader('Thu'),
+                  _DayHeader('Fri'),
+                  _DayHeader('Sat'),
+                  _DayHeader('Sun'),
                 ],
               ),
             ),
-            const SizedBox(height: 10),
+
+            const SizedBox(height: 16),
 
             // Calendar Grid
             Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.all(16),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 7,
-                  childAspectRatio: 1,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                ),
-                itemCount: calendarDays.length,
-                itemBuilder: (context, index) {
-                  final date = calendarDays[index];
-                  final isCurrentMonth = date.month == displayMonth.month;
-                  final isTodayDate = date.year == isToday.year &&
-                      date.month == isToday.month &&
-                      date.day == isToday.day;
-                  final isWorkoutDay = _isScheduledWorkoutDay(date);
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: GridView.builder(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 7,
+                    childAspectRatio: 1.3,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                  ),
+                  itemCount: calendarDays.length,
+                  itemBuilder: (context, index) {
+                    final date = calendarDays[index];
+                    final isCurrentMonth = date.month == displayMonth.month;
+                    final isTodayDate = date.year == isToday.year &&
+                        date.month == isToday.month &&
+                        date.day == isToday.day;
+                    final isWorkoutDay = _isScheduledWorkoutDay(date);
 
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: isCurrentMonth
-                          ? (isWorkoutDay ? Colors.blue.shade300 : Colors.grey.shade600)
-                          : Colors.grey.shade800,
-                      borderRadius: BorderRadius.circular(8),
-                      border: isTodayDate
-                          ? Border.all(color: Colors.amber, width: 2)
-                          : null,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 3,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '${date.day}',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: isCurrentMonth ? Colors.white : Colors.grey.shade400,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        if (isCurrentMonth && isWorkoutDay)
-                          const Icon(Icons.fitness_center, color: Colors.white, size: 16)
-                        else if (isCurrentMonth)
-                          const Icon(Icons.local_activity, color: Colors.white, size: 16),
-                      ],
-                    ),
-                  );
-                },
+                    return _CalendarDayCard(
+                      date: date,
+                      isCurrentMonth: isCurrentMonth,
+                      isTodayDate: isTodayDate,
+                      isWorkoutDay: isWorkoutDay,
+                    );
+                  },
+                ),
               ),
             ),
 
             // Legend
             Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _LegendItem(
-                    color: Colors.blue.shade300,
-                    label: 'Workout Days',
-                  ),
-                  _LegendItem(
-                    color: Colors.grey.shade600,
-                    label: 'Rest Days',
-                  ),
-                ],
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _LegendItem(
+                      color: Color(0xFF42A5F5),
+                      icon: Icons.fitness_center,
+                      label: 'Workout',
+                    ),
+                    Container(
+                      height: 35,
+                      width: 1.5,
+                      color: Colors.white.withOpacity(0.25),
+                    ),
+                    _LegendItem(
+                      color: Color.fromARGB(255, 145, 158, 171),
+                      icon: Icons.hotel,
+                      label: 'Rest',
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -210,38 +262,152 @@ class _FullCalendarPageState extends State<FullCalendarPage> {
       ),
     );
   }
+
+  String _getMonthName(int month) {
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return months[month - 1];
+  }
+}
+
+class _DayHeader extends StatelessWidget {
+  final String day;
+
+  const _DayHeader(this.day);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Text(
+        day,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
+          fontSize: 12,
+          letterSpacing: 0.5,
+        ),
+      ),
+    );
+  }
+}
+
+class _CalendarDayCard extends StatelessWidget {
+  final DateTime date;
+  final bool isCurrentMonth;
+  final bool isTodayDate;
+  final bool isWorkoutDay;
+
+  const _CalendarDayCard({
+    required this.date,
+    required this.isCurrentMonth,
+    required this.isTodayDate,
+    required this.isWorkoutDay,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: !isCurrentMonth
+            ? Colors.grey.shade800
+            : isWorkoutDay
+                ? Color(0xFF42A5F5)
+                : Colors.grey.shade600,
+        gradient: !isCurrentMonth || !isWorkoutDay
+            ? null
+            : LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF42A5F5),
+                  Color(0xFF1E88E5),
+                ],
+              ),
+        borderRadius: BorderRadius.circular(14),
+        border: isTodayDate
+            ? Border.all(color: Colors.amber, width: 3)
+            : null,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            '${date.day}',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: isCurrentMonth ? Colors.white : Colors.grey.shade400,
+              letterSpacing: 0.3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _LegendItem extends StatelessWidget {
   final Color color;
+  final IconData icon;
   final String label;
 
   const _LegendItem({
     required this.color,
+    required this.icon,
     required this.label,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 20,
-          height: 20,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(4),
+    return Flexible(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 28,
+            height: 28,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(7),
+              boxShadow: [
+                BoxShadow(
+                  color: color.withOpacity(0.4),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Icon(
+              icon,
+              size: 15,
+              color: Colors.white,
+            ),
           ),
-        ),
-        const SizedBox(width: 8),
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 12,
+          const SizedBox(width: 12),
+          Flexible(
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.3,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -17,7 +17,7 @@ class DayCheckbox extends StatelessWidget {
     return CheckboxListTile(
       title: Text(
         day,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+        style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
       ),
       value: isSelected,
       onChanged: onChanged,

@@ -16,9 +16,6 @@ class HomepageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final percentage = totalExercises > 0 
-        ? ((completedExercises / totalExercises) * 100).toInt() 
-        : 0;
 
     return Container(
       padding: const EdgeInsets.all(16),
