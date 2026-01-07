@@ -159,7 +159,9 @@ class UserActivity {
     }
   }
 
-  static Future<UserActivity?> fromMap(data) async {}
+  static Future<UserActivity?> fromMap(data) async {
+    return null;
+  }
 
   
 }
