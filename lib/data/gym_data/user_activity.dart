@@ -159,6 +159,8 @@ class UserActivity {
     }
   }
 
+  static Future<UserActivity?> fromMap(data) async {}
+
   
 }
 

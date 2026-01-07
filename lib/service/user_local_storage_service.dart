@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:fit_go/controllers/user_setup_controller.dart';
+import 'package:fit_go/data/gym_data/user_activity.dart';
 import 'package:fit_go/models/enums.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
@@ -136,6 +136,56 @@ class UserLocalStorageService {
     } catch (e) {
       print(' Image error: $e');
     }
+  }
+}
+
+// ===================== LOAD EXERCISE PROGRESS =====================
+
+static Future<UserActivity?> loadExerciseProgressFromFile() async {
+  try {
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/exercise_progress.json');
+
+    if (!await file.exists()) {
+      print('Exercise progress file does not exist');
+      return null;
+    }
+
+    final jsonString = await file.readAsString();
+    final data = jsonDecode(jsonString);
+    
+    print('Exercise progress loaded from file');
+    return UserActivity.fromMap(data);
+  } catch (error) {
+    print('Error loading exercise progress from file: $error');
+    return null;
+  }
+}
+
+static Future<UserActivity?> loadExerciseProgressFromWeb() async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString('exercise_progress');
+
+    if (jsonString == null) {
+      print('No exercise progress in web storage');
+      return null;
+    }
+    
+    final data = jsonDecode(jsonString);
+    print('Exercise progress loaded from web storage');
+    return UserActivity.fromMap(data);
+  } catch (error) {
+    print('Error loading exercise progress from web: $error');
+    return null;
+  }
+}
+
+static Future<UserActivity?> loadExerciseProgress() async {
+  if (kIsWeb) {
+    return await loadExerciseProgressFromWeb();
+  } else {
+    return await loadExerciseProgressFromFile();
   }
 }
 

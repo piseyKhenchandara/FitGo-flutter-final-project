@@ -33,8 +33,6 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Calculate completed exercises using the actual data
-    final completedCount = widget.exercises.where((ex) => ex['completed'] == true).length;
 
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 12, 39, 135),
@@ -61,7 +59,6 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                     dayNumber: widget.dayNumber,
                     duration: widget.duration,
                     totalExercises: widget.exercises.length,
-                    completedExercises: completedCount,
                   ),
         
                 

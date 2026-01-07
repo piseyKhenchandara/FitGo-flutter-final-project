@@ -48,7 +48,6 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
     final dayName = dayNames[date.weekday - 1];
     
     // Check if this day is in the user's schedule
-<<<<<<< HEAD
     return UserActivity.weekdayIndex.containsKey(dayName) &&
         UserActivity.weekdayIndex[dayName] != null &&
         UserActivity.weekdayIndex[dayName]! < (UserActivity.weekdayIndex[dayName] ?? -1) + 1;
@@ -70,9 +69,6 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
     
 
     return UserActivity.weekdayIndex.containsKey(dayName);
-=======
-    return widget.userActivity.schedule.contains(dayName);
->>>>>>> 57a1125fb059260872d1164c8fab5a6fe1ab364d
   }
 
   String _getDayOfWeek(DateTime date) {
