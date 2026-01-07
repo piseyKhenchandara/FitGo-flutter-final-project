@@ -8,7 +8,6 @@ class UserActivity {
 
   Map<int, List<Map<String, dynamic>>> dayActivities = {};
 
-
   static const Map<String, int> weekdayIndex = {
     'monday': 0,
     'tuesday': 1,
@@ -20,7 +19,7 @@ class UserActivity {
   };
 
   static const Map<String, Map<String, Map<String, int>>>
-  exerciseAllocationByGoal = {
+      exerciseAllocationByGoal = {
     'stayFit': {
       'low': {'arms': 6, 'back': 5, 'legs': 7, 'shoulder': 5},
       'medium': {'arms': 5, 'back': 4, 'legs': 6, 'shoulder': 4},
@@ -39,10 +38,9 @@ class UserActivity {
   };
 
   UserActivity({List<String>? scheduleOverride})
-    : schedule = scheduleOverride ?? userSetupController.schedule ?? [] {
+      : schedule = scheduleOverride ?? userSetupController.schedule ?? [] {
     _generateActivitiesFor30Days();
   }
-
 
   Set<int> _getWorkoutDays() {
     return schedule
@@ -64,7 +62,6 @@ class UserActivity {
     for (int day = 0; day < 30; day++) {
       final dayOfWeek = day % 7;
 
-      //  Correct workout-day check
       if (!workoutDays.contains(dayOfWeek)) continue;
 
       List<Map<String, dynamic>> dayExercises = [];
@@ -86,6 +83,7 @@ class UserActivity {
             'totalDurationSeconds': ex.time.inSeconds,
             'remainingSeconds': ex.time.inSeconds,
             'completed': false,
+            'completedAt': null, // ADDED
           });
         }
       });
@@ -94,7 +92,7 @@ class UserActivity {
     }
   }
 
-  // ===================== HELPERS =====================
+
   String _getIntensity() {
     if (schedule.length == 3) return 'low';
     if (schedule.length <= 5) return 'medium';
@@ -114,7 +112,7 @@ class UserActivity {
     }
   }
 
-  // ===================== PUBLIC =====================
+
   List<Map<String, dynamic>> getActivitiesForDay(int dayIndex) {
     if (dayIndex < 0 || dayIndex >= 30) return [];
     return dayActivities[dayIndex] ?? [];
@@ -137,7 +135,6 @@ class UserActivity {
     return '${m}m ${s}s';
   }
 
-  /// Complete a rep for an activity on a specific day
   void completeRep(int dayIndex, int activityIndex) {
     final dayExercises = getActivitiesForDay(dayIndex);
 
@@ -150,16 +147,17 @@ class UserActivity {
         activity['completedReps'] = completedReps + 1;
         activity['remainingSeconds'] =
             (totalReps - (completedReps + 1)) *
-            (activity['durationPerRepSeconds'] as int);
+                (activity['durationPerRepSeconds'] as int);
 
         if (completedReps + 1 == totalReps) {
           activity['completed'] = true;
+          activity['completedAt'] = DateTime.now().toIso8601String();
         }
       }
     }
   }
 
-  /// Get formatted time remaining for an activity (MM:SS format)
+
   String getFormattedTime(int dayIndex, int activityIndex) {
     final dayExercises = getActivitiesForDay(dayIndex);
 
@@ -173,7 +171,7 @@ class UserActivity {
     return '$minutes:${secs.toString().padLeft(2, '0')}';
   }
 
-  /// Get completion percentage for a specific day
+
   double getCompletionPercentageForDay(int dayIndex) {
     final dayExercises = getActivitiesForDay(dayIndex);
 
@@ -183,7 +181,12 @@ class UserActivity {
     return (completed / dayExercises.length) * 100;
   }
 
-  /// Get total reps to complete for a specific day
+
+  bool isDayCompleted(int dayIndex) {
+    return getCompletionPercentageForDay(dayIndex) == 100.0;
+  }
+
+
   int getTotalRepsForDay(int dayIndex) {
     final dayExercises = getActivitiesForDay(dayIndex);
     return dayExercises.fold(
@@ -192,12 +195,101 @@ class UserActivity {
     );
   }
 
-  /// Get completed reps for a specific day
   int getCompletedRepsForDay(int dayIndex) {
     final dayExercises = getActivitiesForDay(dayIndex);
     return dayExercises.fold(
       0,
       (sum, activity) => sum + (activity['completedReps'] as int),
     );
+  }
+
+  /// Get overall progress across all 30 days
+  Map<String, dynamic> getOverallProgress() {
+    int totalExercises = 0;
+    int completedExercises = 0;
+    int totalDays = 0;
+    int completedDays = 0;
+
+    for (int day = 0; day < 30; day++) {
+      final exercises = getActivitiesForDay(day);
+      if (exercises.isNotEmpty) {
+        totalDays++;
+        totalExercises += exercises.length;
+        completedExercises +=
+            exercises.where((e) => e['completed'] == true).length;
+
+        if (isDayCompleted(day)) {
+          completedDays++;
+        }
+      }
+    }
+
+    return {
+      'totalExercises': totalExercises,
+      'completedExercises': completedExercises,
+      'totalDays': totalDays,
+      'completedDays': completedDays,
+      'exerciseCompletionPercentage': totalExercises > 0
+          ? (completedExercises / totalExercises * 100).toStringAsFixed(1)
+          : '0.0',
+      'dayCompletionPercentage': totalDays > 0
+          ? (completedDays / totalDays * 100).toStringAsFixed(1)
+          : '0.0',
+    };
+  }
+
+  /// Get list of all completed days
+  List<int> getCompletedDays() {
+    List<int> completed = [];
+    for (int day = 0; day < 30; day++) {
+      if (isDayCompleted(day)) {
+        completed.add(day);
+      }
+    }
+    return completed;
+  }
+
+  /// Get current streak of completed days
+  int getCurrentStreak() {
+    int streak = 0;
+    for (int day = 29; day >= 0; day--) {
+      if (isDayCompleted(day)) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+    return streak;
+  }
+
+  /// Convert to Map for JSON serialization
+  Map<String, dynamic> toMap() {
+    return {
+      'schedule': schedule,
+      'dayActivities': dayActivities.map(
+        (key, value) => MapEntry(
+          key.toString(),
+          value.map((activity) => Map<String, dynamic>.from(activity)).toList(),
+        ),
+      ),
+    };
+  }
+
+  /// Create from Map (for loading from storage)
+  static UserActivity fromMap(Map<String, dynamic> map) {
+    final userActivity = UserActivity(
+      scheduleOverride: List<String>.from(map['schedule'] ?? []),
+    );
+
+    // Override generated activities with saved ones
+    if (map['dayActivities'] != null) {
+      userActivity.dayActivities.clear();
+      (map['dayActivities'] as Map<String, dynamic>).forEach((key, value) {
+        userActivity.dayActivities[int.parse(key)] =
+            (value as List).map((e) => Map<String, dynamic>.from(e)).toList();
+      });
+    }
+
+    return userActivity;
   }
 }
