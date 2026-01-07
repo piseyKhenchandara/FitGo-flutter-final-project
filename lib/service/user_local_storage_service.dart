@@ -104,6 +104,7 @@ class UserLocalStorageService {
     }
     else {
       return await loadFromFile();
+      
     }
 
   }

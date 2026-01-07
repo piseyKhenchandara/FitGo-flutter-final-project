@@ -119,15 +119,16 @@ class _HomepageState extends State<Homepage> {
                 ],
               ),
             ),
+            SizedBox(height: 30,),
 
             // Feature Workout Section
             Container(
               padding: const EdgeInsets.all(20),
               margin: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white.withOpacity(0.3)),
+                border: Border.all(color: Colors.white.withOpacity(0.5)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,14 +142,6 @@ class _HomepageState extends State<Homepage> {
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Colors.white
-                        ),
-                      ),
-                      Text(
-                        "see all",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.blue,
-                          decoration: TextDecoration.underline,
                         ),
                       ),
                     ],
@@ -170,7 +163,7 @@ class _HomepageState extends State<Homepage> {
               ),
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
 
             // Workout Days List
             Expanded(child: WorkoutDay()),
