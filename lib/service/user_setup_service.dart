@@ -69,7 +69,7 @@ class UserService {
   }
 
   static double? saveBMI (double bmi) {
-    return userSetupController.weight_avg = bmi;
+    return userSetupController.bmi = bmi;
   }
 
 
