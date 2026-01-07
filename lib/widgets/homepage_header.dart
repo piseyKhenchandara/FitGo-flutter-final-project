@@ -26,19 +26,7 @@ class HomepageHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Back button
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Row(
-              children: [
-                Icon(Icons.arrow_back, color: Colors.white),
-                SizedBox(width: 8),
-                Text(
-                  'Back',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ],
-            ),
-          ),
+          
           SizedBox(height: 20),
           
           // Day title
