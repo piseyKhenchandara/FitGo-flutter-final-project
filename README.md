@@ -8,30 +8,25 @@ This project is created as the **final project for the Frontend (Flutter) course
 
 ---
 
-## Purpose of the App
-- Help users choose workouts based on their body information  
-- Support both **weight loss** and **muscle gain**  
-- Provide simple **daily workout plans**  
-- Track workout progress and completion  
-
----
-
 ## Main Features
-- Onboarding screens with app introduction  
-- Gender selection (Male / Female)  
-- Height and weight input  
-- User information form  
-- BMI / weight average result  
-- Daily workout plans (Day 1 – Day 7)  
-- Exercise list with images  
-- Workout timer (reps and time-based)  
-- Progress tracking (completed percentage)  
-- Clean and modern UI design  
+- Onboarding and user setup (gender, height, weight, BMI)
+- Daily workout plans (30 days)
+- Exercise library with images and instructions
+- Workout timer (reps and time-based)
+- Cross-platform (Android, iOS, Web)
+
+### App Demo
+
+<div align="center">
+  <img src="gif/homepage.gif" alt="Homepage" width="200"/>
+  <img src="gif/schedule.gif" alt="Schedule" width="200"/>
+  <img src="gif/day_exercise.gif" alt="Daily Exercises" width="200"/>
+  <img src="gif/each_exercise.gif" alt="Exercise Details" width="200"/>
+</div>
 
 ---
 
 ## System Architecture
-
 ```mermaid
 graph TB
     subgraph CLIENT["Client Layer"]
@@ -76,26 +71,20 @@ graph TB
         JSON[JSON Serialization<br/>user_setup.json]
     end
 
-    %% Main flow connections
     USER --> FLUTTER
     FLUTTER --> PRESENTATION
-    
     PRESENTATION --> DATA_LAYER
     DATA_LAYER --> SERVICE_LAYER
     SERVICE_LAYER --> SETUP_CONTROLLER
-    
     SETUP_CONTROLLER --> STORAGE
-    
     STORAGE --> PERSISTENCE
     
-    %% Platform-specific connections
     SETUP_CONTROLLER -.kIsWeb=false.-> MOBILE
     SETUP_CONTROLLER -.kIsWeb=true.-> WEB
     
     MOBILE --> JSON
     WEB --> JSON
 
-    %% Styling
     classDef clientStyle fill:#1a1a1a,stroke:#2196F3,stroke-width:3px,color:#ffffff
     classDef appStyle fill:#2c3e50,stroke:#2196F3,stroke-width:3px,color:#ffffff
     classDef uiStyle fill:#0d7377,stroke:#2196F3,stroke-width:3px,color:#ffffff
@@ -115,77 +104,79 @@ graph TB
     class PERSISTENCE,JSON persistStyle
 ```
 
-### Architecture Flow:
+### Architecture Overview
 
-The application follows a clean layered architecture pattern:
+**Layered Architecture:**
+1. **UI Layer** - Screens, widgets, state management
+2. **Data Layer** - Models and enums
+3. **Service Layer** - Business logic (validation, storage)
+4. **Controller** - UserSetupController (singleton)
+5. **Storage Layer** - Platform-specific persistence (mobile/web)
 
-1. **Client Layer** → Users interact through mobile and web interfaces
-2. **Flutter Application** → Cross-platform framework (Android, iOS, Web)
-3. **UI Layer** → Screens, widgets, and state management
-4. **Data Layer** → Models and enums for data structure
-5. **Service Layer** → Business logic (UserService, ValidationService, StorageService)
-6. **UserSetupController** → Central singleton for in-memory state management
-7. **Storage Layer** → Platform-specific persistent storage
-   - **Mobile**: File System using `path_provider`
-   - **Web**: SharedPreferences using Local Storage API
-8. **Persistent Storage** → JSON serialization (`user_setup.json`)
-
-### Data Flow:
-
-**Save Flow:**
-1. User Input → UI Layer → ValidationService → UserService
-2. UserService → UserSetupController (in-memory)
-3. When setup complete → UserLocalStorageService.saveUserSetup()
-4. Platform detection (kIsWeb) → Mobile/Web Storage → JSON file
-
-**Load Flow:**
-1. App starts → UserLocalStorageService.loadUserSetup()
-2. Read from platform-specific storage → Parse JSON
-3. Load data into UserSetupController → Update UI
+**Data Flow:**
+- **Save**: UI → Validation → UserService → UserSetupController → Storage → JSON
+- **Load**: Storage → Parse JSON → UserSetupController → Update UI
 
 ---
 
 ## Technologies Used
 - **Flutter** - Cross-platform framework
 - **Dart** - Programming language
-- **Material Design** - UI/UX components
-- **path_provider** - File system access (mobile)
+- **Material Design** - UI components
+- **path_provider** - File system (mobile)
 - **shared_preferences** - Local storage (web)
-- **Frontend only** (no backend)
 
 ---
 
-## App Screens
-- Welcome and onboarding pages  
-- User setup (gender, height, weight)  
-- Workout dashboard  
-- Daily exercise list  
-- Exercise detail screen with timer  
+## Installation
+```bash
+# Clone repository
+git clone https://github.com/piseyKhenchandara/FitGo-flutter-final-project.git
+
+# Navigate to project
+cd fit_go
+
+# Install dependencies
+flutter pub get
+
+# Run on web
+flutter run -d chrome --web-port 8080
+
+# Run on mobile
+flutter run
+```
 
 ---
 
 ## What I Learned
-- Flutter layout system (Column, Row, Stack)
-- Navigation between screens
-- Using widgets and custom UI components
-- Handling user input with validation
-- State management for UI updates
-- Designing mobile-friendly interfaces
-- Implementing clean architecture patterns
-- Managing platform-specific storage (mobile vs web)
-- Singleton pattern for state management
-- JSON serialization and deserialization
+- Flutter layout system and navigation
+- State management and UI updates
+- Input validation and error handling
+- Platform-specific storage implementation
+- Clean architecture patterns
+- JSON serialization
+- Cross-platform development
 
 ---
 
 ## Future Improvements
-- Add backend and user authentication  
-- Save workout progress using a database  
-- Add more workout types and exercises
-- Implement workout history tracking
-- Add dark mode support
-- Improve animations and overall UX  
-- Add social features (share progress)
-- Integrate fitness APIs (step counter, heart rate)
+- Backend integration and authentication
+- Database for workout progress
+- More exercise variations
+- Workout history and analytics
+- Dark mode support
+- Social features and sharing
 
 ---
+
+## Contact
+
+**Developer:** Pisey Khenchandara,Soy Chanratana
+**GitHub:** [@piseyKhenchandara](https://github.com/piseyKhenchandara)
+**GitHub:** [@SoyChanratana](hhttps://github.com/Zorina69)
+
+---
+
+## License
+
+Educational project for Flutter course final project.
