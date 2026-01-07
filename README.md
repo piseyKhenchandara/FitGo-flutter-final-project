@@ -18,12 +18,10 @@ This project is created as the **final project for the Frontend (Flutter) course
 ### App Demo
 
 <div align="center">
-
-  <img src="assets/gif/homepage.gif" alt="Homepage" width="200"/>
-  <img src="assets/gif/schedule.gif" alt="Schedule" width="200"/>
-  <img src="assets/gif/day_exercise.gif" alt="Daily Exercises" width="200"/>
-  <img src="assets/gif/each_exercise.gif" alt="Exercise Details" width="200"/>
-
+  <img src="gif/homepage.gif" alt="Homepage" width="200"/>
+  <img src="gif/schedule.gif" alt="Schedule" width="200"/>
+  <img src="gif/day_exercise.gif" alt="Daily Exercises" width="200"/>
+  <img src="gif/each_exercise.gif" alt="Exercise Details" width="200"/>
 </div>
 
 ---
@@ -148,28 +146,7 @@ flutter run -d chrome --web-port 8080
 flutter run
 ```
 
----
 
-## What I Learned
-- Flutter layout system and navigation
-- State management and UI updates
-- Input validation and error handling
-- Platform-specific storage implementation
-- Clean architecture patterns
-- JSON serialization
-- Cross-platform development
-
----
-
-## Future Improvements
-- Backend integration and authentication
-- Database for workout progress
-- More exercise variations
-- Workout history and analytics
-- Dark mode support
-- Social features and sharing
-
----
 
 ## Contact
 
@@ -185,6 +162,3 @@ flutter run
 Educational project for Flutter course final project.
 =======
 Educational project for Flutter course final project.
-
-
->>>>>>> d7de37f (Update README.md)
