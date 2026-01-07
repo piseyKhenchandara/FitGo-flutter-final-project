@@ -15,12 +15,16 @@ class WeightPage extends StatefulWidget {
 }
 
 class _WeightPageState extends State<WeightPage> {
-  double selectedWeight  = 73; // default weight (center)
-  final double minWeight = 30;
-  final double maxWeight = 200;
+  double selectedWeight = 73.0;
+  final double minWeight = 30.0;
+  final double maxWeight = 200.0;
+  final double step = 0.1; 
 
   @override
   Widget build(BuildContext context) {
+    
+    final int itemCount = ((maxWeight - minWeight) / step).round() + 1;
+
     return Scaffold(
       body: Container(
         color: Colors.blue[400],
@@ -44,7 +48,6 @@ class _WeightPageState extends State<WeightPage> {
 
             const SizedBox(height: 60),
 
-         
             const Icon(
               Icons.arrow_drop_down,
               color: Colors.black,
@@ -53,7 +56,6 @@ class _WeightPageState extends State<WeightPage> {
 
             const SizedBox(height: 10),
 
-         
             SizedBox(
               width: double.infinity,
               height: 120,
@@ -61,26 +63,28 @@ class _WeightPageState extends State<WeightPage> {
                 quarterTurns: -1,
                 child: ListWheelScrollView.useDelegate(
                   controller: FixedExtentScrollController(
-                    initialItem: (selectedWeight - minWeight).toInt(),
+                    initialItem: ((selectedWeight - minWeight) / step).round(),
                   ),
                   physics: const FixedExtentScrollPhysics(),
                   itemExtent: 60,
                   onSelectedItemChanged: (index) {
                     setState(() {
-                      selectedWeight = minWeight + index;
+                      selectedWeight = minWeight + (index * step);
+                      selectedWeight = double.parse(selectedWeight.toStringAsFixed(1)); // Round to 1 decimal
                     });
                   },
                   childDelegate: ListWheelChildBuilderDelegate(
-                    childCount: (maxWeight - minWeight + 1).toInt(),
+                    childCount: itemCount,
                     builder: (context, index) {
-                      final value = minWeight + index;
-                      final isSelected = value == selectedWeight;
+                      final value = minWeight + (index * step);
+                      final roundedValue = double.parse(value.toStringAsFixed(1));
+                      final isSelected = (roundedValue - selectedWeight).abs() < 0.01;
 
                       return RotatedBox(
                         quarterTurns: 1,
                         child: Center(
                           child: Text(
-                            value.toString(),
+                            roundedValue.toStringAsFixed(1), // Show 1 decimal place
                             style: TextStyle(
                               fontSize: isSelected ? 28 : 20,
                               fontWeight: isSelected
@@ -101,9 +105,8 @@ class _WeightPageState extends State<WeightPage> {
 
             const SizedBox(height: 20),
 
-            
             Text(
-              ' kg',
+              '${selectedWeight.toStringAsFixed(1)} kg',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 36,
@@ -111,7 +114,7 @@ class _WeightPageState extends State<WeightPage> {
               ),
             ),
 
-            const SizedBox(height: 120,),
+            const SizedBox(height: 120),
 
             BackNextButton(
               go_back: true,
@@ -119,12 +122,13 @@ class _WeightPageState extends State<WeightPage> {
               backRoute: '/setup/height',
               onNext: () {
                 UserService.saveWeight(selectedWeight);
-                SnackbarHelper.showInfo(context, 'You selected weight : ${userSetupController.weight} kg');
+                SnackbarHelper.showInfo(
+                  context,
+                  'You selected weight: ${selectedWeight.toStringAsFixed(1)} kg',
+                );
                 return true;
               },
               nextRoute: '/setup/weight_avg',
-
-              
             )
           ],
         ),

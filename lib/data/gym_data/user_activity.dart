@@ -94,7 +94,7 @@ class UserActivity {
     }
   }
 
-  // ===================== HELPERS =====================
+
   String _getIntensity() {
     if (schedule.length == 3) return 'low';
     if (schedule.length <= 5) return 'medium';
@@ -114,7 +114,7 @@ class UserActivity {
     }
   }
 
-  // ===================== PUBLIC =====================
+  
   List<Map<String, dynamic>> getActivitiesForDay(int dayIndex) {
     if (dayIndex < 0 || dayIndex >= 30) return [];
     return dayActivities[dayIndex] ?? [];
