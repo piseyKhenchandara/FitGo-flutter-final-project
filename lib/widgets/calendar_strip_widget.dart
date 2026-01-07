@@ -48,27 +48,7 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
     final dayName = dayNames[date.weekday - 1];
     
     // Check if this day is in the user's schedule
-    return UserActivity.weekdayIndex.containsKey(dayName) &&
-        UserActivity.weekdayIndex[dayName] != null &&
-        UserActivity.weekdayIndex[dayName]! < (UserActivity.weekdayIndex[dayName] ?? -1) + 1;
-  }
-
-  bool _isWorkoutScheduledForDay(DateTime date) {
-    // Get the day name (monday, tuesday, etc.)
-    final dayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-    final dayName = dayNames[date.weekday - 1];
-    
-    // Check if this day is in user's workout schedule
-    return UserActivity.weekdayIndex.keys.contains(dayName) && 
-        UserActivity.weekdayIndex[dayName] != null;
-  }
-
-  bool _isScheduleDay(DateTime date) {
-    final dayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-    final dayName = dayNames[date.weekday - 1];
-    
-    // Check if user selected this day as a workout day
-    return UserActivity.weekdayIndex.containsKey(dayName);
+    return widget.userActivity.schedule.contains(dayName);
   }
 
   String _getDayOfWeek(DateTime date) {
@@ -134,11 +114,9 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
             itemCount: 60,
             itemBuilder: (context, index) {
               final date = startDate.add(Duration(days: index));
-              final dayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-              final dayName = dayNames[date.weekday - 1];
               
               // Check if this day is scheduled as a workout day by user
-              final isScheduledWorkout = UserActivity.weekdayIndex.containsKey(dayName);
+              final isScheduledWorkout = _isScheduledWorkoutDay(date);
               
               final isToday = date.year == DateTime.now().year &&
                   date.month == DateTime.now().month &&
@@ -155,22 +133,37 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
                   margin: const EdgeInsets.symmetric(horizontal: 5),
                   width: 70,
                   decoration: BoxDecoration(
+                    // Workout day: vibrant blue gradient
+                    // Rest day: muted gray
+                    // Selected: bright white
                     color: isSelected
                         ? Colors.white
                         : isScheduledWorkout
-                            ? Colors.blue.shade300
+                            ? Color(0xFF42A5F5)
                             : Colors.grey.shade600,
                     borderRadius: BorderRadius.circular(12),
+                    gradient: isSelected
+                        ? null
+                        : isScheduledWorkout
+                            ? LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Color(0xFF42A5F5),
+                                  Color(0xFF1E88E5),
+                                ],
+                              )
+                            : null,
                     border: isToday
                         ? Border.all(color: Colors.amber, width: 3)
                         : isSelected
-                            ? Border.all(color: Colors.black, width: 2)
+                            ? Border.all(color: Color(0xFF1976D2), width: 2)
                             : null,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 5,
-                        offset: const Offset(0, 2),
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
@@ -181,40 +174,75 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
                         _getDayOfWeek(date),
                         style: TextStyle(
                           fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: isSelected ? Colors.black : Colors.white,
+                          fontWeight: FontWeight.w600,
+                          color: isSelected ? Color(0xFF1976D2) : Colors.white,
+                          letterSpacing: 0.5,
                         ),
                       ),
                       const SizedBox(height: 3),
                       Text(
                         '${date.day}',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: isSelected ? Colors.black : Colors.white,
+                          color: isSelected ? Color(0xFF1976D2) : Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 4),
                       if (isScheduledWorkout)
-                        Icon(
-                          Icons.fitness_center,
-                          color: isSelected ? Colors.green : Colors.white,
-                          size: 18,
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: isSelected ? Color(0xFF4CAF50) : Colors.white.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.fitness_center,
+                                color: isSelected ? Colors.white : Colors.white,
+                                size: 10,
+                              ),
+                              const SizedBox(width: 2),
+                              Text(
+                                'Work',
+                                style: TextStyle(
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.bold,
+                                  color: isSelected ? Colors.white : Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
                         )
                       else
-                        Icon(
-                          Icons.local_activity,
-                          color: isSelected ? Colors.orange : Colors.white,
-                          size: 18,
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: isSelected ? Color(0xFFFFA726) : Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.hotel,
+                                color: isSelected ? Colors.white : Colors.white,
+                                size: 10,
+                              ),
+                              const SizedBox(width: 2),
+                              Text(
+                                'Rest',
+                                style: TextStyle(
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.bold,
+                                  color: isSelected ? Colors.white : Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      const SizedBox(height: 2),
-                      Text(
-                        isScheduledWorkout ? 'Work' : 'Rest',
-                        style: TextStyle(
-                          fontSize: 9,
-                          color: isSelected ? Colors.black : Colors.white,
-                        ),
-                      ),
                     ],
                   ),
                 ),
