@@ -1,9 +1,7 @@
 import 'package:fit_go/controllers/user_setup_controller.dart';
 import 'package:fit_go/service/user_local_storage_service.dart';
 import 'package:fit_go/widgets/appbar.dart';
-import 'package:fit_go/widgets/calendar_strip_widget.dart';
 import 'package:fit_go/widgets/workout_day.dart';
-import 'package:fit_go/data/gym_data/user_activity.dart';
 import 'package:flutter/material.dart';
 
 class Homepage extends StatefulWidget {
@@ -16,7 +14,6 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   String greeting = "Morning";
   bool isLoading = true;
-  late UserActivity userActivity;
 
   @override
   void initState() {
@@ -26,21 +23,16 @@ class _HomepageState extends State<Homepage> {
 
   Future<void> _loadUserData() async {
     try {
-      // Load user setup data
+      // Load data from JSON file
       await UserLocalStorageService.loadUserSetup();
-      
-      // Load exercise progress
-      final savedActivity = await UserLocalStorageService.loadExerciseProgress();
-      
+
       setState(() {
-        userActivity = savedActivity ?? UserActivity();
         greeting = _getGreeting();
         isLoading = false;
       });
     } catch (e) {
       print('Error loading user data: $e');
       setState(() {
-        userActivity = UserActivity();
         isLoading = false;
       });
     }
@@ -82,9 +74,9 @@ class _HomepageState extends State<Homepage> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color.fromARGB(255, 12, 39, 135),
-              Color(0xFF1976D2),
-              Color(0xFF26C6DA),
+              Color.fromARGB(255, 12, 39, 135), // Purple
+              Color(0xFF1976D2), // Blue
+              Color(0xFF26C6DA), // Cyan
             ],
           ),
         ),
@@ -94,6 +86,7 @@ class _HomepageState extends State<Homepage> {
               padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
               child: Appbar(),
             ),
+
             const SizedBox(height: 10),
 
             // Greeting Section
@@ -126,16 +119,95 @@ class _HomepageState extends State<Homepage> {
                 ],
               ),
             ),
-            const SizedBox(height: 15),
+            SizedBox(height: 30,),
 
-            // Calendar Strip
-            CalendarStripWidget(userActivity: userActivity),
+            // Feature Workout Section
+            Container(
+              padding: const EdgeInsets.all(20),
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.white.withOpacity(0.5)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text(
+                        "Feature workouts",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: const [
+                        _WorkoutCard("assets/images/andrew1.png"),
+                        SizedBox(width: 15),
+                        _WorkoutCard("assets/images/image.png"),
+                        SizedBox(width: 15),
+                        _WorkoutCard("assets/images/ronaldo1.png"),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
-            const SizedBox(height: 15),
+            const SizedBox(height: 20),
 
             // Workout Days List
             Expanded(child: WorkoutDay()),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _WorkoutCard extends StatelessWidget {
+  final String imagePath;
+  const _WorkoutCard(this.imagePath);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 200,
+      height: 100,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: Image.asset(
+          imagePath,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              color: Colors.grey[300],
+              child: const Icon(
+                Icons.image_not_supported,
+                color: Colors.grey,
+                size: 40,
+              ),
+            );
+          },
         ),
       ),
     );
