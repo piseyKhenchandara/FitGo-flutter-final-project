@@ -10,8 +10,20 @@ import 'package:fit_go/ui/setup/weight_page.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
-  static final GoRouter router = GoRouter(
-    initialLocation: '/onboarding',
+  static GoRouter getRouter(bool isSetupComplete) {
+    
+    return GoRouter(
+    initialLocation: isSetupComplete ? '/homepage' : '/onboarding',
+
+    redirect: (context, state) {
+       
+        if (isSetupComplete && 
+            (state.uri.path.startsWith('/onboarding') || 
+             state.uri.path.startsWith('/setup'))) {
+          return '/homepage';  
+        }
+        return null; 
+      },
 
     routes: [
       GoRoute(
@@ -65,6 +77,7 @@ class AppRouter {
       ),
     ],
   );
+}
 }
 
 /* 
