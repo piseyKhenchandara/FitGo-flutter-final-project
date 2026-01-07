@@ -1,12 +1,12 @@
-import 'dart:async';
 import 'package:fit_go/ui/home/exercise_detail_page.dart';
 import 'package:fit_go/widgets/appbar.dart';
 import 'package:fit_go/widgets/homepage_header.dart';
+import 'package:fit_go/widgets/rest_day_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_go/data/gym_data/user_activity.dart';
 
 
-class WorkoutDetailPage extends StatelessWidget {
+class WorkoutDetailPage extends StatefulWidget {
   final int dayNumber;
   final List<Map<String, dynamic>> exercises;
   final String duration;
@@ -23,27 +23,46 @@ class WorkoutDetailPage extends StatelessWidget {
   });
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    
-    appBar: Appbar(),
-    body: exercises.isEmpty
-        ? Center(
-            child: Text(
-              'Rest Day',
-              style: TextStyle(fontSize: 24, color: Colors.grey),
-            ),
-          )
-        : Container(
-            color: Colors.lightBlue,
-            
-            child: Column(
-              children: [
-                // Header with back button and day info
-                HomepageHeader(
-                  dayNumber: dayNumber,
-                  duration: duration,
+  State<WorkoutDetailPage> createState() => _WorkoutDetailPageState();
+}
+
+class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
+  void _refreshPage() {
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Calculate completed exercises using the actual data
+    final completedCount = widget.exercises.where((ex) => ex['completed'] == true).length;
+
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 12, 39, 135),
+      appBar: Appbar(),
+      body: widget.exercises.isEmpty
+          ? RestDayWidget(
+            )
+          : Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color.fromARGB(255, 12, 39, 135), // Purple
+                    Color(0xFF1976D2), // Blue
+                    Color(0xFF26C6DA), // Cyan
+                  ],
                 ),
+              ),
+              child: Column(
+                children: [
+                  // Header with back button and day info
+                  HomepageHeader(
+                    dayNumber: widget.dayNumber,
+                    duration: widget.duration,
+                    totalExercises: widget.exercises.length,
+                    completedExercises: completedCount,
+                  ),
         
                 
                 SizedBox(height: 16),
@@ -51,24 +70,28 @@ Widget build(BuildContext context) {
                 Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: exercises.length,
+                    itemCount: widget.exercises.length,
                     itemBuilder: (context, index) {
-                      final exercise = exercises[index];
+                      final exercise = widget.exercises[index];
+                      final isCompleted = exercise['completed'] == true;
+                      
                       return Card(
                         margin: const EdgeInsets.only(bottom: 12),
-                        
+                        color: isCompleted ? Colors.green.shade100 : null,
                         child: ListTile(
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ExerciseDetailPage(
-                                  userActivity: userActivity,
-                                  dayIndex: dayIndex,
+                                  userActivity: widget.userActivity,
+                                  dayIndex: widget.dayIndex,
                                   activityIndex: index,
                                 ),
                               ),
                             );
+                            // Refresh the page when returning from exercise detail
+                            _refreshPage();
                           },
                           leading: exercise['image'] != null
                               ? Image.network(
@@ -86,9 +109,11 @@ Widget build(BuildContext context) {
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
-                            'Reps: ${exercise['reps']} | Type: ${exercise['type']}',
+                            'Reps: ${exercise['completedReps']}/${exercise['reps']} | Type: ${exercise['type']}',
                           ),
-                          trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                          trailing: isCompleted 
+                              ? const Icon(Icons.check_circle, color: Colors.green, size: 24)
+                              : const Icon(Icons.arrow_forward_ios, size: 16),
                         ),
                       );
                     },

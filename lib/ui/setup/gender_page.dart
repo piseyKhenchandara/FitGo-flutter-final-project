@@ -39,26 +39,30 @@ class _GenderPageState extends State<GenderPage> {
           ),
 
           GenderWidgets(
-              image : 'assets/icons/female_icon.png',
-              text : 'female',
-              color : Colors.pink[300]!,
-              onPressed: () {
-                UserService.saveGender('female');
-                
-              }
+            image: 'assets/icons/female_icon.png',
+            text: 'Female',
+            color: Colors.pink[500]!,
+            isSelected: userSetupController.gender == 'female',
+            onPressed: () {
+              setState(() {
+                userSetupController.gender = 'female';
+              });
+              UserService.saveGender('female');
+            },
           ),
-        
 
-          GenderWidgets(
-              image :'assets/icons/male_icon.png',
-              text : 'male',
-              color : Colors.blue[300]!,
+            GenderWidgets(
+              image: 'assets/icons/male_icon.png',
+              text: 'Male',
+              color: Colors.blue[500]!,
+              isSelected: userSetupController.gender == 'male',
               onPressed: () {
+                setState(() {
+                  userSetupController.gender = 'male';
+                });
                 UserService.saveGender('male');
-                
               },
-          ), 
-
+            ),
 
               BackNextButton(
                 go_back: true,

@@ -20,7 +20,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
     if(currentIndex == hookPages.length ) {
       return context.go('/setup/user_info');
-    };
+    }
 
     if (currentIndex < hookPages.length) {
       _controller.nextPage(

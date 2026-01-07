@@ -19,15 +19,19 @@ class _WorkoutDayState extends State<WorkoutDay> {
     userActivity = UserActivity();
   }
 
+  @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       itemCount: 30,
       itemBuilder: (context, index) {
         final dayNumber = index + 1;
         final dayActivities = userActivity.getActivitiesForDay(index);
         final isRest = dayActivities.isEmpty;
-        final String duration = userActivity.getTotalDurationForDay(index);
+        final String duration =
+            userActivity.getTotalDurationForDay(index);
+
+        final bool selected = isSelected == dayNumber;
 
         return InkWell(
           onTap: () {
@@ -38,18 +42,18 @@ class _WorkoutDayState extends State<WorkoutDay> {
               context,
               MaterialPageRoute(
                 builder: (context) => WorkoutDetailPage(
-                  dayNumber: dayNumber,
-                  exercises: dayActivities,
-                  duration: duration,
-                  userActivity: userActivity,
-                  dayIndex: index,
-                ),
+                        dayNumber: dayNumber,
+                        exercises: dayActivities,
+                        duration: duration,
+                        userActivity: userActivity,
+                        dayIndex: index,
+                      ),
               ),
             );
           },
           child: Container(
-            padding: EdgeInsets.all(16),
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 12),
+            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.fromLTRB(20, 0, 20, 12),
             decoration: BoxDecoration(
               gradient: isRest
                   ? null
@@ -62,31 +66,37 @@ class _WorkoutDayState extends State<WorkoutDay> {
               color: isRest ? Colors.white.withOpacity(0.1) : null,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: Colors.white.withOpacity(0.3), 
+                color: selected
+                    ? Colors.blueAccent
+                    : Colors.white.withOpacity(0.3),
+                width: selected ? 3 : 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1), 
-                  blurRadius: 8, // Added missing properties
-                  offset: Offset(0, 4),
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded( 
+                Expanded(
                   child: ListTile(
-                    contentPadding: EdgeInsets.zero, 
+                    contentPadding: EdgeInsets.zero,
                     leading: Icon(
                       Icons.fitness_center,
-                      color: isRest ? Colors.grey : Colors.black,
+                      color:
+                          isRest ? Colors.white : Colors.black87,
                       size: 30,
                     ),
                     title: Text(
-                      'Day ${dayNumber}',
+                      'Day $dayNumber',
                       style: TextStyle(
-                        color: isRest ? Colors.grey : Colors.black,
+                        color: isRest
+                            ? Colors.white
+                            : Colors.black87,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -94,22 +104,33 @@ class _WorkoutDayState extends State<WorkoutDay> {
                     subtitle: Text(
                       isRest ? "Rest" : "Workout",
                       style: TextStyle(
-                        color: isRest ? Colors.grey : Colors.white70,
+                        color: isRest
+                            ? Colors.white
+                            : Colors.blueGrey,
                       ),
                     ),
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: isRest ? Colors.grey.shade200 : Colors.blue.shade400,
+                    color: isRest
+                        ? Colors.grey.shade200
+                        : Colors.blue.shade500,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.white.withOpacity(0.8)),
+                    border: Border.all(
+                      color: isRest
+                          ? Colors.white.withOpacity(0.8)
+                          : Colors.blue.withOpacity(0.8),
+                    ),
                   ),
                   child: Text(
                     duration,
                     style: TextStyle(
-                      color: isRest ? Colors.black54 : Colors.white,
+                      color:
+                          isRest ? Colors.black : Colors.white,
+                      fontSize: 15,
                     ),
                   ),
                 ),
