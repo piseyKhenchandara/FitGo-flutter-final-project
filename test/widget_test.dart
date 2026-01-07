@@ -1,30 +1,107 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:fit_go/main.dart';
+import 'package:fit_go/controllers/user_setup_controller.dart';
+import 'package:fit_go/models/enums.dart';
+import 'package:fit_go/service/user_setup_service.dart';
+import 'package:fit_go/service/validation_service.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp(isSetupComplete: false,));
+  group('Validation Tests', () {
+    test('Name validation should reject empty name', () {
+      final result = ValidationService.validateName('');
+      expect(result, isNotNull);
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    test('Name validation should accept valid name', () {
+      final result = ValidationService.validateName('John');
+      expect(result, isNull);
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    test('Age validation should reject invalid age', () {
+      final result = ValidationService.validateAge('5');
+      expect(result, isNotNull);
+    });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    test('Age validation should accept valid age', () {
+      final result = ValidationService.validateAge('25');
+      expect(result, isNull);
+    });
+
+    test('Schedule validation should require minimum 3 days', () {
+      final result = ValidationService.validateSchedule(['monday', 'tuesday']);
+      expect(result, isNotNull);
+    });
+
+    test('Schedule validation should accept 3 or more days', () {
+      final result = ValidationService.validateSchedule(['monday', 'tuesday', 'wednesday']);
+      expect(result, isNull);
+    });
+  });
+
+  group('BMI Calculation Tests', () {
+    test('BMI should be calculated correctly', () {
+      userSetupController.height = 170; // cm
+      userSetupController.weight = 70.0; // kg
+      
+      final bmi = UserService.calculateBMI();
+      
+      expect(bmi, isNotNull);
+      expect(bmi!, greaterThan(24.0));
+      expect(bmi, lessThan(25.0));
+    });
+
+    test('BMI should return null if height is missing', () {
+      userSetupController.height = null;
+      userSetupController.weight = 70.0;
+      
+      final bmi = UserService.calculateBMI();
+      
+      expect(bmi, isNull);
+    });
+
+    test('BMI should return null if weight is missing', () {
+      userSetupController.height = 170;
+      userSetupController.weight = null;
+      
+      final bmi = UserService.calculateBMI();
+      
+      expect(bmi, isNull);
+    });
+  });
+
+  group('UserSetupController Tests', () {
+    setUp(() {
+      // Clear data before each test
+      userSetupController.clear();
+    });
+
+    test('isComplete should be false when data is incomplete', () {
+      expect(userSetupController.isComplete, isFalse);
+    });
+
+    test('isComplete should be true when all data is filled', () {
+      userSetupController.name = 'John';
+      userSetupController.age = 25;
+      userSetupController.gender = 'male';
+      userSetupController.height = 170;
+      userSetupController.weight = 70.0;
+      userSetupController.weight_avg = 24.5;
+      userSetupController.bmi = 24.5;
+      userSetupController.goal = GoalType.stayFit;
+      userSetupController.schedule = ['monday', 'tuesday', 'wednesday'];
+      
+      expect(userSetupController.isComplete, isTrue);
+    });
+
+    test('toMap should convert controller to Map correctly', () {
+      userSetupController.name = 'John';
+      userSetupController.age = 25;
+      userSetupController.gender = 'male';
+      
+      final map = userSetupController.toMap();
+      
+      expect(map['name'], 'John');
+      expect(map['age'], 25);
+      expect(map['gender'], 'male');
+    });
   });
 }
