@@ -1,7 +1,7 @@
-import 'package:fit_go/ui/home/exercise_detail_page.dart';
-import 'package:fit_go/widgets/appbar.dart';
-import 'package:fit_go/widgets/homepage_header.dart';
-import 'package:fit_go/widgets/rest_day_widget.dart';
+import 'package:fit_go/ui/mainscreen/exercise_detail_page.dart';
+import 'package:fit_go/ui/widgets/appbar.dart';
+import 'package:fit_go/ui/widgets/homepage_header.dart';
+import 'package:fit_go/ui/widgets/rest_day_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_go/data/gym_data/user_activity.dart';
 

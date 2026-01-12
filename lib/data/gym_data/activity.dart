@@ -1,4 +1,4 @@
-import 'package:fit_go/models/activity_model.dart';
+import 'package:fit_go/domain/models/activity_model.dart';
 
 List<ActivityModel> activity = [
   //Arms list

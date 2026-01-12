@@ -1,8 +1,8 @@
-import 'package:fit_go/controllers/user_setup_controller.dart';
-import 'package:fit_go/service/user_local_storage_service.dart';
-import 'package:fit_go/widgets/appbar.dart';
-import 'package:fit_go/widgets/calendar_strip_widget.dart';
-import 'package:fit_go/widgets/workout_day.dart';
+import 'package:fit_go/domain/models/user_setup_controller.dart';
+import 'package:fit_go/domain/service/user_local_storage_service.dart';
+import 'package:fit_go/ui/widgets/appbar.dart';
+import 'package:fit_go/ui/widgets/calendar_strip_widget.dart';
+import 'package:fit_go/ui/widgets/workout_day.dart';
 import 'package:fit_go/data/gym_data/user_activity.dart';
 import 'package:flutter/material.dart';
 

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:fit_go/data/gym_data/user_activity.dart';
-import 'package:fit_go/widgets/appbar.dart';
-import 'package:fit_go/widgets/homepage_header.dart';
+import 'package:fit_go/ui/widgets/appbar.dart';
+import 'package:fit_go/ui/widgets/homepage_header.dart';
 import 'package:flutter/material.dart';
 
 class ExerciseDetailPage extends StatefulWidget {

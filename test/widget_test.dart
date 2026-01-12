@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fit_go/controllers/user_setup_controller.dart';
-import 'package:fit_go/models/enums.dart';
-import 'package:fit_go/service/user_setup_service.dart';
-import 'package:fit_go/service/validation_service.dart';
+import 'package:fit_go/domain/models/user_setup_controller.dart';
+import 'package:fit_go/domain/models/enums.dart';
+import 'package:fit_go/domain/service/user_setup_service.dart';
+import 'package:fit_go/domain/service/validation_service.dart';
 
 void main() {
   group('Validation Tests', () {

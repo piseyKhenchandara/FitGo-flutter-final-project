@@ -1,5 +1,5 @@
 import 'package:fit_go/data/gym_data/user_activity.dart';
-import 'package:fit_go/ui/home/workout_detail_page.dart';
+import 'package:fit_go/ui/mainscreen/workout_detail_page.dart';
 import 'package:flutter/material.dart';
 
 class WorkoutDay extends StatefulWidget {

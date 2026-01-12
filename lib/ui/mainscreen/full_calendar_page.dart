@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fit_go/data/gym_data/user_activity.dart';
-import 'package:fit_go/widgets/appbar.dart';
+import 'package:fit_go/ui/widgets/appbar.dart';
 
 class FullCalendarPage extends StatefulWidget {
   final UserActivity userActivity;

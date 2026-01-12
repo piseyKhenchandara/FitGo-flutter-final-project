@@ -1,12 +1,12 @@
-import 'package:fit_go/ui/home/homepage.dart';
+import 'package:fit_go/ui/mainscreen/homepage.dart';
 import 'package:fit_go/ui/onboarding/onboarding_page.dart';
 
-import 'package:fit_go/ui/setup/gender_page.dart';
-import 'package:fit_go/ui/setup/height_page.dart';
-import 'package:fit_go/ui/setup/schedule_page.dart';
-import 'package:fit_go/ui/setup/user_info_page.dart';
-import 'package:fit_go/ui/setup/weight_avg_page.dart';
-import 'package:fit_go/ui/setup/weight_page.dart';
+import 'package:fit_go/ui/setupscreen/gender_page.dart';
+import 'package:fit_go/ui/setupscreen/height_page.dart';
+import 'package:fit_go/ui/setupscreen/schedule_page.dart';
+import 'package:fit_go/ui/setupscreen/user_info_page.dart';
+import 'package:fit_go/ui/setupscreen/weight_avg_page.dart';
+import 'package:fit_go/ui/setupscreen/weight_page.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:fit_go/models/enums.dart';
+import 'package:fit_go/domain/models/enums.dart';
 
 class UserSetupController {
   String? gender;

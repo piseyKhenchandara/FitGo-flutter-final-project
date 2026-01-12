@@ -1,9 +1,9 @@
-import 'package:fit_go/controllers/user_setup_controller.dart';
-import 'package:fit_go/helpers/snackbar_helper.dart';
-import 'package:fit_go/service/user_setup_service.dart';
-import 'package:fit_go/widgets/appbar.dart';
-import 'package:fit_go/widgets/back_next_button.dart';
-import 'package:fit_go/widgets/gender_widgets.dart';
+import 'package:fit_go/domain/models/user_setup_controller.dart';
+import 'package:fit_go/ui/helpers/snackbar_helper.dart';
+import 'package:fit_go/domain/service/user_setup_service.dart';
+import 'package:fit_go/ui/widgets/appbar.dart';
+import 'package:fit_go/ui/widgets/back_next_button.dart';
+import 'package:fit_go/ui/widgets/gender_widgets.dart';
 import 'package:flutter/material.dart';
 
 class GenderPage extends StatefulWidget {

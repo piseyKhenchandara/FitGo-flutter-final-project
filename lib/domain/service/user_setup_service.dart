@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:fit_go/controllers/user_setup_controller.dart';
-import 'package:fit_go/models/enums.dart';
-import 'package:fit_go/service/validation_service.dart';
+import 'package:fit_go/domain/models/user_setup_controller.dart';
+import 'package:fit_go/domain/models/enums.dart';
+import 'package:fit_go/domain/service/validation_service.dart';
 import 'package:flutter/foundation.dart';
 
 class UserService {
