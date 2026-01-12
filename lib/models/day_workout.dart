@@ -1,5 +1,6 @@
 import 'package:fit_go/domain/models/activity_model.dart';
 
+
 class DayWorkout {
   final String dayName;
   final List<String> muscleGroups;

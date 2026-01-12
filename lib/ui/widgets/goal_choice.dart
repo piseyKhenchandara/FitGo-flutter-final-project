@@ -1,4 +1,5 @@
 import 'package:fit_go/domain/models/enums.dart';
+
 import 'package:flutter/material.dart';
 
 class GoalChoice extends StatelessWidget {

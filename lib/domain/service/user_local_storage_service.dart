@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:fit_go/domain/models/user_setup_controller.dart';
 import 'package:fit_go/data/gym_data/user_activity.dart';
 import 'package:fit_go/domain/models/enums.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -126,7 +127,7 @@ class UserLocalStorageService {
     userSetupController.goal = GoalType.values.firstWhere(
       (e) => e.name == data['goal'],
       orElse: () => GoalType.stayFit,
-    );
+    ) as GoalType?;
   }
   
   if (data['imageData'] != null && data['imageData'] != '') {

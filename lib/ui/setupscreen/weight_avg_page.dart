@@ -1,7 +1,8 @@
 
 import 'package:fit_go/data/avg_weight.dart';
-import 'package:fit_go/ui/helpers/snackbar_helper.dart';
 import 'package:fit_go/domain/models/enums.dart';
+import 'package:fit_go/ui/helpers/snackbar_helper.dart';
+
 import 'package:fit_go/domain/service/user_setup_service.dart';
 import 'package:fit_go/ui/widgets/appbar.dart';
 import 'package:fit_go/ui/widgets/back_next_button.dart';

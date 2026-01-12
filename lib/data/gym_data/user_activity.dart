@@ -38,6 +38,8 @@ class UserActivity {
     },
   };
 
+  
+
   UserActivity({List<String>? scheduleOverride})
     : schedule = scheduleOverride ?? userSetupController.schedule ?? [] {
     _generateActivitiesFor30Days();
@@ -158,6 +160,9 @@ class UserActivity {
       }
     }
   }
+
+
+  
 
   static Future<UserActivity?> fromMap(data) async {
     return null;

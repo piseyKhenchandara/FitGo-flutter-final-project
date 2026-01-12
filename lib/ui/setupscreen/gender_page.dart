@@ -1,3 +1,4 @@
+
 import 'package:fit_go/domain/models/user_setup_controller.dart';
 import 'package:fit_go/ui/helpers/snackbar_helper.dart';
 import 'package:fit_go/domain/service/user_setup_service.dart';

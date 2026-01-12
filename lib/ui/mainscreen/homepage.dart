@@ -1,4 +1,5 @@
 import 'package:fit_go/domain/models/user_setup_controller.dart';
+
 import 'package:fit_go/domain/service/user_local_storage_service.dart';
 import 'package:fit_go/ui/widgets/appbar.dart';
 import 'package:fit_go/ui/widgets/calendar_strip_widget.dart';
