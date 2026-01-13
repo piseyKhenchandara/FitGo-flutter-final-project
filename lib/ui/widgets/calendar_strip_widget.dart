@@ -3,7 +3,7 @@ import 'package:fit_go/ui/mainscreen/full_calendar_page.dart';
 import 'package:flutter/material.dart';
 
 class CalendarStripWidget extends StatefulWidget {
-  const CalendarStripWidget({super.key, required this.workoutplanModel});
+  const CalendarStripWidget({super.key, required this.workoutplanModel,});
 
   final WorkoutplanModel workoutplanModel;
 
@@ -43,11 +43,15 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
   }
 
   bool _isScheduledWorkoutDay(DateTime date) {
-    final dayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-    final dayName = dayNames[date.weekday - 1];
-    
-    // Check if this day is in the user's schedule
-    return widget.workoutplanModel.weeklySchedule.contains(dayName);
+    final dayOfWeek = date.weekday - 1; // Monday = 0, Sunday = 6
+
+    // Check if this day index has exercises in the weekly schedule
+    if (dayOfWeek >= 0 &&
+        dayOfWeek < widget.workoutplanModel.weeklySchedule.length) {
+      return !widget.workoutplanModel.weeklySchedule[dayOfWeek].isRestDay;
+    }
+
+    return false;
   }
 
   String _getDayOfWeek(DateTime date) {
@@ -77,10 +81,7 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
                   ),
                   Text(
                     "Today: ${startDate.toString().split(' ')[0]}",
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.white70,
-                    ),
+                    style: const TextStyle(fontSize: 12, color: Colors.white70),
                   ),
                 ],
               ),
@@ -113,11 +114,12 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
             itemCount: 60,
             itemBuilder: (context, index) {
               final date = startDate.add(Duration(days: index));
-              
+
               // Check if this day is scheduled as a workout day by user
               final isScheduledWorkout = _isScheduledWorkoutDay(date);
-              
-              final isToday = date.year == DateTime.now().year &&
+
+              final isToday =
+                  date.year == DateTime.now().year &&
                   date.month == DateTime.now().month &&
                   date.day == DateTime.now().day;
               final isSelected = index == selectedDayIndex;
@@ -138,26 +140,23 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
                     color: isSelected
                         ? Colors.white
                         : isScheduledWorkout
-                            ? Color(0xFF42A5F5)
-                            : Colors.grey.shade600,
+                        ? Color(0xFF42A5F5)
+                        : Colors.grey.shade600,
                     borderRadius: BorderRadius.circular(12),
                     gradient: isSelected
                         ? null
                         : isScheduledWorkout
-                            ? LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Color(0xFF42A5F5),
-                                  Color(0xFF1E88E5),
-                                ],
-                              )
-                            : null,
+                        ? LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Color(0xFF42A5F5), Color(0xFF1E88E5)],
+                          )
+                        : null,
                     border: isToday
                         ? Border.all(color: Colors.amber, width: 3)
                         : isSelected
-                            ? Border.all(color: Color(0xFF1976D2), width: 2)
-                            : null,
+                        ? Border.all(color: Color(0xFF1976D2), width: 2)
+                        : null,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.3),
@@ -190,9 +189,14 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
                       const SizedBox(height: 4),
                       if (isScheduledWorkout)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
-                            color: isSelected ? Color(0xFF4CAF50) : Colors.white.withOpacity(0.3),
+                            color: isSelected
+                                ? Color(0xFF4CAF50)
+                                : Colors.white.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Row(
@@ -209,7 +213,9 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
                                 style: TextStyle(
                                   fontSize: 8,
                                   fontWeight: FontWeight.bold,
-                                  color: isSelected ? Colors.white : Colors.white,
+                                  color: isSelected
+                                      ? Colors.white
+                                      : Colors.white,
                                 ),
                               ),
                             ],
@@ -217,9 +223,14 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
                         )
                       else
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
-                            color: isSelected ? Color(0xFFFFA726) : Colors.white.withOpacity(0.2),
+                            color: isSelected
+                                ? Color(0xFFFFA726)
+                                : Colors.white.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Row(
@@ -236,7 +247,9 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
                                 style: TextStyle(
                                   fontSize: 8,
                                   fontWeight: FontWeight.bold,
-                                  color: isSelected ? Colors.white : Colors.white,
+                                  color: isSelected
+                                      ? Colors.white
+                                      : Colors.white,
                                 ),
                               ),
                             ],

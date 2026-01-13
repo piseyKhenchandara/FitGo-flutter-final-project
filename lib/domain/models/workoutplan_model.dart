@@ -9,7 +9,7 @@ class WorkoutplanModel {
     required this.monthlyPlan,
   });
 
-  /// Get exercises for a specific day (0-29)
+
   Day? getExercisesForDay(int dayIndex) {
     if (dayIndex < 0 || dayIndex >= monthlyPlan.length) {
       return null;
@@ -17,7 +17,7 @@ class WorkoutplanModel {
     return monthlyPlan[dayIndex];
   }
 
-  /// Get total duration in seconds for a specific day (0-29)
+
   int getTotalDurationOfDay(int dayIndex) {
     final dayInstance = getExercisesForDay(dayIndex);
     if (dayInstance == null || dayInstance.exercises.isEmpty) {
@@ -31,7 +31,7 @@ class WorkoutplanModel {
     return totalDuration;
   }
 
-  /// Get total duration formatted as string (e.g., "45m 30s") for a specific day (0-29)
+
   String getTotalDurationForDay(int dayIndex) {
     final totalSeconds = getTotalDurationOfDay(dayIndex);
     
@@ -47,7 +47,7 @@ class WorkoutplanModel {
     return '${minutes}m ${seconds}s';
   }
 
-  /// Mark a rep as completed for an exercise
+ 
   void completeRep(int dayIndex, int exerciseIndex) {
     final dayInstance = getExercisesForDay(dayIndex);
     if (dayInstance != null && 

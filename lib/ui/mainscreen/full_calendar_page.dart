@@ -23,20 +23,15 @@ class _FullCalendarPageState extends State<FullCalendarPage> {
     displayMonth = DateTime.now();
   }
 
-  bool _isScheduledWorkoutDay(DateTime date) {
-    final dayNames = [
-      'monday',
-      'tuesday',
-      'wednesday',
-      'thursday',
-      'friday',
-      'saturday',
-      'sunday'
-    ];
-    final dayName = dayNames[date.weekday - 1];
-    return widget.workoutplanModel.weeklySchedule.contains(dayName);
+bool _isScheduledWorkoutDay(DateTime date) {
+  final dayOfWeek = date.weekday - 1; // Monday = 0, Sunday = 6
+  
+  if (dayOfWeek >= 0 && dayOfWeek < widget.workoutplanModel.weeklySchedule.length) {
+    return !widget.workoutplanModel.weeklySchedule[dayOfWeek].isRestDay;
   }
-
+  
+  return false;
+}
   List<DateTime> _getDaysInMonth(DateTime month) {
     final last = DateTime(month.year, month.month + 1, 0);
     final daysInMonth = last.day;

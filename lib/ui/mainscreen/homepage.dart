@@ -4,6 +4,7 @@ import 'package:fit_go/domain/service/user_local_storage_service.dart';
 import 'package:fit_go/domain/service/workoutplan_service.dart';
 import 'package:fit_go/ui/widgets/appbar.dart';
 import 'package:fit_go/ui/widgets/calendar_strip_widget.dart';
+
 import 'package:fit_go/ui/widgets/workout_day.dart';
 import 'package:flutter/material.dart';
 

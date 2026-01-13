@@ -2,7 +2,7 @@ import 'package:uuid/uuid.dart';
 
 
 class ActivityModel{
-  final String id = Uuid().v4();  
+  final String id;  
   final String image;
   final String name;
   final String type;
@@ -10,10 +10,11 @@ class ActivityModel{
   final Duration time;
 
   ActivityModel({
+    String? id,
     required this.image,
     required this.name,
     required this.type,
     required this.time,
     required this.amount,
-  });
+  }): id = id ?? Uuid().v4();
 }
