@@ -56,64 +56,60 @@ class WorkoutplanService {
 
   /// Generate the weekly template based on schedule
   static List<Day> _generateWeeklySchedule(List<String> schedule) {
-    final List<Day> weeklyDays = [];
-    final random = Random();
-    final intensity = _getIntensity(schedule);
-    final goalKey = _getGoalKey();
-    final allocation = exerciseAllocationByGoal[goalKey]?[intensity];
+  final weeklyDays = <Day>[];
+  final intensity = _getIntensity(schedule);
+  final goalKey = _getGoalKey();
+  final allocation = exerciseAllocationByGoal[goalKey]?[intensity];
 
-    if (allocation == null) {
-      return weeklyDays;
+  if (allocation == null) return weeklyDays;
+
+  final workoutDays = schedule
+      .where((d) => weekdayIndex.containsKey(d))
+      .map((d) => weekdayIndex[d]!)
+      .toSet();
+
+  for (int dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+    final dayName = _getDayName(dayOfWeek);
+    
+    // Seed random with day of week for consistency
+    final random = Random(dayOfWeek);
+
+    if (workoutDays.contains(dayOfWeek)) {
+      List<ExerciseInstance> exercises = [];
+
+      allocation.forEach((muscleType, count) {
+        final muscleExercises = activity.where((a) => a.type == muscleType).toList();
+
+        for (int i = 0; i < count && muscleExercises.isNotEmpty; i++) {
+          final ex = muscleExercises[random.nextInt(muscleExercises.length)];
+          exercises.add(ExerciseInstance(
+            id: ex.id,
+            template: ex,
+            reps: ex.amount,
+            durationPerRepSeconds: (ex.time.inSeconds / ex.amount).ceil(),
+            totalDurationSeconds: ex.time.inSeconds,
+            remainingSeconds: ex.time.inSeconds,
+          ));
+        }
+      });
+
+      weeklyDays.add(Day(
+        dayName: dayName,
+        isRestDay: false,
+        intensity: intensity,
+        exercises: exercises,
+      ));
+    } else {
+      weeklyDays.add(Day(
+        dayName: dayName,
+        isRestDay: true,
+        exercises: [],
+      ));
     }
-
-    final workoutDays = schedule
-        .where((d) => weekdayIndex.containsKey(d))
-        .map((d) => weekdayIndex[d]!)
-        .toSet();
-
-    for (int dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
-      final dayName = _getDayName(dayOfWeek);
-
-      if (workoutDays.contains(dayOfWeek)) {
-        // Generate exercises for this day
-        List<ExerciseInstance> exercises = [];
-
-        allocation.forEach((muscleType, count) {
-          final muscleExercises =
-              activity.where((a) => a.type == muscleType).toList();
-
-          for (int i = 0; i < count && muscleExercises.isNotEmpty; i++) {
-            final ex =
-                muscleExercises[random.nextInt(muscleExercises.length)];
-            exercises.add(ExerciseInstance(
-              id: ex.id,
-              template: ex,
-              reps: ex.amount,
-              durationPerRepSeconds: (ex.time.inSeconds / ex.amount).ceil(),
-              totalDurationSeconds: ex.time.inSeconds,
-              remainingSeconds: ex.time.inSeconds,
-            ));
-          }
-        });
-
-        weeklyDays.add(Day(
-          dayName: dayName,
-          isRestDay: false,
-          intensity: intensity,
-          exercises: exercises,
-        ));
-      } else {
-        // Rest day
-        weeklyDays.add(Day(
-          dayName: dayName,
-          isRestDay: true,
-          exercises: [],
-        ));
-      }
-    }
-
-    return weeklyDays;
   }
+
+  return weeklyDays;
+}
 
   /// Generate 30-day instances from weekly template
   static List<Day> _generate30DayInstances(
@@ -141,14 +137,13 @@ class WorkoutplanService {
     return monthlyPlan;
   }
 
-  /// Calculate intensity based on schedule length
+
   static String _getIntensity(List<String> schedule) {
     if (schedule.length == 3) return 'low';
     if (schedule.length <= 5) return 'medium';
     return 'high';
   }
 
-  /// Get goal key from user's goal type
   static String _getGoalKey() {
     switch (user.goal) {
       case GoalType.stayFit:
