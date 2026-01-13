@@ -1,11 +1,11 @@
-import 'package:fit_go/data/gym_data/user_activity.dart';
+import 'package:fit_go/domain/models/workoutplan_model.dart';
 import 'package:fit_go/ui/mainscreen/full_calendar_page.dart';
 import 'package:flutter/material.dart';
 
 class CalendarStripWidget extends StatefulWidget {
-  const CalendarStripWidget({super.key, required this.userActivity});
+  const CalendarStripWidget({super.key, required this.workoutplanModel});
 
-  final UserActivity userActivity;
+  final WorkoutplanModel workoutplanModel;
 
   @override
   State<CalendarStripWidget> createState() => _CalendarStripWidgetState();
@@ -47,7 +47,7 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
     final dayName = dayNames[date.weekday - 1];
     
     // Check if this day is in the user's schedule
-    return widget.userActivity.schedule.contains(dayName);
+    return widget.workoutplanModel.weeklySchedule.contains(dayName);
   }
 
   String _getDayOfWeek(DateTime date) {
@@ -90,7 +90,7 @@ class _CalendarStripWidgetState extends State<CalendarStripWidget> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => FullCalendarPage(
-                        userActivity: UserActivity(),
+                        workoutplanModel: widget.workoutplanModel,
                       ),
                     ),
                   );

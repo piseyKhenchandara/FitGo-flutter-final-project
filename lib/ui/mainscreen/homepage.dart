@@ -1,10 +1,10 @@
-import 'package:fit_go/domain/models/user_setup_controller.dart';
-
+import 'package:fit_go/domain/models/user_model.dart';
+import 'package:fit_go/domain/models/workoutplan_model.dart';
 import 'package:fit_go/domain/service/user_local_storage_service.dart';
+import 'package:fit_go/domain/service/workoutplan_service.dart';
 import 'package:fit_go/ui/widgets/appbar.dart';
 import 'package:fit_go/ui/widgets/calendar_strip_widget.dart';
 import 'package:fit_go/ui/widgets/workout_day.dart';
-import 'package:fit_go/data/gym_data/user_activity.dart';
 import 'package:flutter/material.dart';
 
 class Homepage extends StatefulWidget {
@@ -17,7 +17,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   String greeting = "Morning";
   bool isLoading = true;
-  late UserActivity userActivity;
+  late WorkoutplanModel workoutplanModel;
 
   @override
   void initState() {
@@ -30,18 +30,20 @@ class _HomepageState extends State<Homepage> {
       // Load user setup data
       await UserLocalStorageService.loadUserSetup();
       
-      // Load exercise progress
-      final savedActivity = await UserLocalStorageService.loadExerciseProgress();
+      // Generate workout plan based on user's schedule
+      final plan = WorkoutplanService.generate30DayPlan(
+        scheduleOverride: user.weeklySchedule,
+        weeklyDaysOverride: null,
+      );
       
       setState(() {
-        userActivity = savedActivity ?? UserActivity();
+        workoutplanModel = plan;
         greeting = _getGreeting();
         isLoading = false;
       });
     } catch (e) {
       print('Error loading user data: $e');
       setState(() {
-        userActivity = UserActivity();
         isLoading = false;
       });
     }
@@ -55,10 +57,10 @@ class _HomepageState extends State<Homepage> {
   }
 
   ImageProvider? _getProfileImage() {
-    if (userSetupController.profileImage != null) {
-      return FileImage(userSetupController.profileImage!);
-    } else if (userSetupController.profileImageWeb != null) {
-      return MemoryImage(userSetupController.profileImageWeb!);
+    if (user.profileImage != null) {
+      return FileImage(user.profileImage!);
+    } else if (user.profileImageWeb != null) {
+      return MemoryImage(user.profileImageWeb!);
     }
     return null;
   }
@@ -107,7 +109,7 @@ class _HomepageState extends State<Homepage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "$greeting : ${userSetupController.name ?? 'User'}",
+                        "$greeting : ${user.name ?? 'User'}",
                         style: const TextStyle(
                           color: Colors.white70,
                           fontSize: 20,
@@ -130,12 +132,12 @@ class _HomepageState extends State<Homepage> {
             const SizedBox(height: 15),
 
             // Calendar Strip
-            CalendarStripWidget(userActivity: userActivity),
+            CalendarStripWidget(workoutplanModel: workoutplanModel),
 
             const SizedBox(height: 15),
 
             // Workout Days List
-            Expanded(child: WorkoutDay()),
+            Expanded(child: WorkoutDay(workoutplanModel: workoutplanModel)),
           ],
         ),
       ),

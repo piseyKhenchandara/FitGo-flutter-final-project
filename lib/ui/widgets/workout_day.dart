@@ -1,23 +1,18 @@
-import 'package:fit_go/data/gym_data/user_activity.dart';
+import 'package:fit_go/domain/models/workoutplan_model.dart';
 import 'package:fit_go/ui/mainscreen/workout_detail_page.dart';
 import 'package:flutter/material.dart';
 
 class WorkoutDay extends StatefulWidget {
-  const WorkoutDay({super.key});
+  const WorkoutDay({super.key, required this.workoutplanModel});
+
+  final WorkoutplanModel workoutplanModel;
 
   @override
   State<WorkoutDay> createState() => _WorkoutDayState();
 }
 
 class _WorkoutDayState extends State<WorkoutDay> {
-  late UserActivity userActivity;
   int isSelected = 1;
-
-  @override
-  void initState() {
-    super.initState();
-    userActivity = UserActivity();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +21,10 @@ class _WorkoutDayState extends State<WorkoutDay> {
       itemCount: 30,
       itemBuilder: (context, index) {
         final dayNumber = index + 1;
-        final dayActivities = userActivity.getActivitiesForDay(index);
-        final isRest = dayActivities.isEmpty;
+        final dayActivities = widget.workoutplanModel.getExercisesForDay(index);
+        final isRest = dayActivities == null || dayActivities.exercises.isEmpty;
         final String duration =
-            userActivity.getTotalDurationForDay(index);
+            widget.workoutplanModel.getTotalDurationForDay(index);
 
         final bool selected = isSelected == dayNumber;
 
@@ -43,10 +38,8 @@ class _WorkoutDayState extends State<WorkoutDay> {
               MaterialPageRoute(
                 builder: (context) => WorkoutDetailPage(
                         dayNumber: dayNumber,
-                        exercises: dayActivities,
-                        duration: duration,
-                        userActivity: userActivity,
                         dayIndex: index,
+                        workoutplanModel: widget.workoutplanModel,
                       ),
               ),
             );

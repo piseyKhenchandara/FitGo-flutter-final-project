@@ -1,17 +1,18 @@
 import 'dart:async';
-import 'package:fit_go/data/gym_data/user_activity.dart';
+import 'package:fit_go/domain/models/workoutplan_model.dart';
+import 'package:fit_go/domain/models/exercise_instance.model.dart';
 import 'package:fit_go/ui/widgets/appbar.dart';
 import 'package:fit_go/ui/widgets/homepage_header.dart';
 import 'package:flutter/material.dart';
 
 class ExerciseDetailPage extends StatefulWidget {
-  final UserActivity userActivity;
+  final WorkoutplanModel workoutplanModel;
   final int dayIndex;
   final int activityIndex;
 
   const ExerciseDetailPage({
     super.key,
-    required this.userActivity,
+    required this.workoutplanModel,
     required this.dayIndex,
     required this.activityIndex,
   });
@@ -21,7 +22,7 @@ class ExerciseDetailPage extends StatefulWidget {
 }
 
 class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
-  late Map<String, dynamic> exercise;
+  late ExerciseInstance exercise;
   Timer? timer;
   bool isTimerRunning = false;
   int currentExerciseIndex = 0;
@@ -36,18 +37,12 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
   }
 
   void loadExercise() {
-    final exercises = widget.userActivity.getActivitiesForDay(widget.dayIndex);
-    if (currentExerciseIndex >= 0 && currentExerciseIndex < exercises.length) {
-      exercise = exercises[currentExerciseIndex];
-      
-      // Calculate total duration: remaining reps × 3 seconds
-      int remainingReps = (exercise['reps'] ?? 0) - (exercise['completedReps'] ?? 0);
-      originalDuration = remainingReps * secondsPerRep;
-      
-      // Set remainingSeconds if not already set
-      if (exercise['remainingSeconds'] == null || exercise['remainingSeconds'] == 0) {
-        exercise['remainingSeconds'] = originalDuration;
-      }
+    final dayInstance = widget.workoutplanModel.getExercisesForDay(widget.dayIndex);
+    if (dayInstance != null && 
+        currentExerciseIndex >= 0 && 
+        currentExerciseIndex < dayInstance.exercises.length) {
+      exercise = dayInstance.exercises[currentExerciseIndex];
+      originalDuration = exercise.remainingSeconds;
     }
   }
 
@@ -60,22 +55,22 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
 
     timer?.cancel();
     timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (exercise['remainingSeconds'] > 0) {
+      if (exercise.remainingSeconds > 0) {
         setState(() {
-          exercise['remainingSeconds']--;
+          exercise.remainingSeconds--;
           
           // Check if we completed a rep (every 3 seconds)
-          int remainingReps = (exercise['reps'] ?? 0) - (exercise['completedReps'] ?? 0);
+          int remainingReps = (exercise.reps) - (exercise.completedReps);
           int expectedSeconds = remainingReps * secondsPerRep;
           
           // If we've counted down 3 seconds, complete a rep
-          if (exercise['remainingSeconds'] > 0 && 
-              exercise['remainingSeconds'] == expectedSeconds - secondsPerRep) {
+          if (exercise.remainingSeconds > 0 && 
+              exercise.remainingSeconds == expectedSeconds - secondsPerRep) {
             completeRep();
           }
           
           // Auto complete when time reaches 0
-          if (exercise['remainingSeconds'] == 0) {
+          if (exercise.remainingSeconds == 0) {
             completeRep();
             pauseTimer();
           }
@@ -88,9 +83,9 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
     pauseTimer();
     setState(() {
       // Recalculate duration based on remaining reps
-      int remainingReps = (exercise['reps'] ?? 0) - (exercise['completedReps'] ?? 0);
+      int remainingReps = (exercise.reps) - (exercise.completedReps);
       originalDuration = remainingReps * secondsPerRep;
-      exercise['remainingSeconds'] = originalDuration;
+      exercise .remainingSeconds= originalDuration;
     });
   }
 
@@ -102,7 +97,7 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
   }
 
   void completeRep() {
-    widget.userActivity.completeRep(widget.dayIndex, currentExerciseIndex);
+    widget.workoutplanModel.completeRep(widget.dayIndex, currentExerciseIndex);
     setState(() {
       loadExercise(); // Reload to get updated values
     });
@@ -120,8 +115,8 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
   }
 
   void goToNextExercise() {
-    final exercises = widget.userActivity.getActivitiesForDay(widget.dayIndex);
-    if (currentExerciseIndex < exercises.length - 1) {
+    final dayInstance = widget.workoutplanModel.getExercisesForDay(widget.dayIndex);
+    if (dayInstance != null && currentExerciseIndex < dayInstance.exercises.length - 1) {
       pauseTimer();
       setState(() {
         currentExerciseIndex++;
@@ -132,7 +127,7 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
   }
 
   String getFormattedTime() {
-    int seconds = exercise['remainingSeconds'] ?? 0;
+    int seconds = exercise.remainingSeconds;
     int minutes = seconds ~/ 60;
     int secs = seconds % 60;
     return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
@@ -146,7 +141,7 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final exercises = widget.userActivity.getActivitiesForDay(widget.dayIndex);
+    final dayInstance = widget.workoutplanModel.getExercisesForDay(widget.dayIndex);
     
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 12, 39, 135),
@@ -168,8 +163,8 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
             
             HomepageHeader(
               dayNumber: widget.dayIndex + 1,
-              totalExercises: exercises.length,
-              duration: widget.userActivity.getTotalDurationForDay(widget.dayIndex),
+              totalExercises: widget.workoutplanModel.getExercisesForDay(widget.dayIndex)?.exercises.length ?? 0,
+              duration: widget.workoutplanModel.getTotalDurationForDay(widget.dayIndex),
             ),
             
             const SizedBox(height: 16),
@@ -212,7 +207,7 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                          
                           Expanded(
                             child: Text(
-                              exercise['name'] ?? 'Exercise',
+                              exercise.template.name,
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 fontSize: 18,
@@ -225,10 +220,10 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                           
                           IconButton(
                             icon: const Icon(Icons.chevron_right, size: 28),
-                            onPressed: currentExerciseIndex < exercises.length - 1 
+                            onPressed: currentExerciseIndex < dayInstance!.exercises.length - 1 
                                 ? goToNextExercise 
                                 : null,
-                            color: currentExerciseIndex < exercises.length - 1 
+                            color: currentExerciseIndex < dayInstance.exercises.length - 1 
                                 ? Colors.black 
                                 : Colors.grey[300],
                           ),
@@ -237,21 +232,19 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                       
                       const SizedBox(height: 30),
 
-                      exercise['image'] != null
-                          ? Image.network(
-                              exercise['image'],
-                              height: 120,
-                              fit: BoxFit.contain,
-                              errorBuilder: (_, __, ___) => 
-                                  const Icon(Icons.fitness_center, size: 100, color: Colors.grey),
-                            )
-                          : const Icon(Icons.fitness_center, size: 100, color: Colors.grey),
+                      Image.network(
+                        exercise.template.image,
+                        height: 120,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => 
+                            const Icon(Icons.fitness_center, size: 100, color: Colors.grey),
+                      ),
                       
                       const SizedBox(height: 40),
 
                      
                       Text(
-                        '${(exercise['reps'] ?? 0) - (exercise['completedReps'] ?? 0)}',
+                        '${exercise.reps - exercise.completedReps}',
                         style: const TextStyle(
                           fontSize: 80,
                           fontWeight: FontWeight.bold,

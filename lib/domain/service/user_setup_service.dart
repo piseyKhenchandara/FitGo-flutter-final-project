@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:fit_go/domain/models/user_setup_controller.dart';
+import 'package:fit_go/domain/models/user_model.dart';
 import 'package:fit_go/domain/service/validation_service.dart';
 import 'package:fit_go/domain/models/enums.dart';
 
@@ -19,8 +19,8 @@ class UserService {
     if(ageError !=null) return ageError;
 
     int age = int.parse(ageText);
-    userSetupController.name = name;
-    userSetupController.age = age;
+    user.name = name;
+    user.age = age;
 
     return null;
     
@@ -29,53 +29,53 @@ class UserService {
 
   static void saveProfileImage(File? mobileImage, Uint8List? webImage) {
     if(kIsWeb && webImage !=null) {
-      userSetupController.profileImageWeb = webImage;
+      user.profileImageWeb = webImage;
 
     }
     else if(mobileImage !=null) {
-      userSetupController.profileImage = mobileImage;
+      user.profileImage = mobileImage;
     }
   }
 
 
   static String? saveGender(String gender) {
 
-    return userSetupController.gender = gender;
+    return user.gender = gender;
   }
 
   static int? saveHeight(int height) {
-    return userSetupController.height = height;
+    return user.height = height;
   }
 
   static double? saveWeight(double weight) {
-    return userSetupController.weight = weight;
+    return user.weight = weight;
   }
 
 
   static void saveSchedule(List<String> schedule) {
-    userSetupController.schedule = schedule;
+    user.weeklySchedule = schedule;
   }
 
 
 
   static double? calculateBMI() {
 
-    if(userSetupController.height == null || userSetupController.weight == null) {
+    if(user.height == null || user.weight == null) {
       return null;
     }
-    double heightInMeters = userSetupController.height! /100;
-    double bmi = userSetupController.weight! /(heightInMeters * heightInMeters);
+    double heightInMeters = user.height! /100;
+    double bmi = user.weight! /(heightInMeters * heightInMeters);
 
     return bmi;
   }
 
   static double? saveBMI (double bmi) {
-    return userSetupController.bmi = bmi;
+    return user.bmi = bmi;
   }
 
 
   static GoalType? saveGoalType(GoalType? choice) {
-      return userSetupController.goal = choice;
+      return user.goal = choice;
   }
  
 

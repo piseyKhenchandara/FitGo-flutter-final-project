@@ -13,7 +13,7 @@ class AppRouter {
   static GoRouter getRouter(bool isSetupComplete) {
     
     return GoRouter(
-     initialLocation: isSetupComplete ? '/onboarding' : '/homepage',
+     initialLocation: isSetupComplete ? '/homepage' : '/onboarding',
 
     redirect: (context, state) {
        

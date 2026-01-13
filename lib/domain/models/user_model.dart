@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:fit_go/domain/models/enums.dart';
 
 
-class UserSetupController {
+class UserModel {
   String? gender;
   int? height;
   double? weight;
@@ -16,7 +16,7 @@ class UserSetupController {
   Uint8List? profileImageWeb;
 
   GoalType? goal;
-  List<String>? schedule;
+  List<String>? weeklySchedule;
 
   bool get isComplete {
     return gender != null &&
@@ -27,7 +27,7 @@ class UserSetupController {
         age != null &&
         bmi !=null &&
         goal !=null &&
-        schedule !=null && schedule!.length >=3;
+        weeklySchedule !=null && weeklySchedule!.length >=3;
   }
 
   // use for saving data to local storage or sharedpreferences or json file
@@ -41,7 +41,7 @@ class UserSetupController {
       'age': age,
       'bmi' : bmi,
       'goal' : goal?.name,
-      'schedule' : schedule,
+      'weeklySchedule' : weeklySchedule,
       'imageType': profileImage != null ? 'file' : 'web',
       'imageData': profileImage != null
           ? profileImage!.path
@@ -64,8 +64,8 @@ class UserSetupController {
     profileImage = null;
     profileImageWeb = null;
     goal = null;
-    schedule = null;
+    weeklySchedule = null;
   }
 }
 
-final userSetupController = UserSetupController();
+final user = UserModel();

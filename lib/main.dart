@@ -1,4 +1,4 @@
-import 'package:fit_go/domain/models/user_setup_controller.dart';
+import 'package:fit_go/domain/models/user_model.dart';
 import 'package:fit_go/ui/router/app_router.dart';
 import 'package:fit_go/domain/service/user_local_storage_service.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +8,11 @@ void main () async{
 
   WidgetsFlutterBinding.ensureInitialized();
 
+  user.clear(); // Clear any previous data
+
   bool hasData = await UserLocalStorageService.loadUserSetup();
 
-  bool isSetupComplete = hasData && userSetupController.isComplete;
+  bool isSetupComplete = hasData && user.isComplete;
 
   runApp( MyApp(isSetupComplete : isSetupComplete));
 

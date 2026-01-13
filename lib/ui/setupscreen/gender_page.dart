@@ -1,5 +1,5 @@
 
-import 'package:fit_go/domain/models/user_setup_controller.dart';
+import 'package:fit_go/domain/models/user_model.dart';
 import 'package:fit_go/ui/helpers/snackbar_helper.dart';
 import 'package:fit_go/domain/service/user_setup_service.dart';
 import 'package:fit_go/ui/widgets/appbar.dart';
@@ -43,10 +43,10 @@ class _GenderPageState extends State<GenderPage> {
             image: 'assets/icons/female_icon.png',
             text: 'Female',
             color: Colors.pink[500]!,
-            isSelected: userSetupController.gender == 'female',
+            isSelected: user.gender == 'female',
             onPressed: () {
               setState(() {
-                userSetupController.gender = 'female';
+                user.gender = 'female';
               });
               UserService.saveGender('female');
             },
@@ -56,10 +56,10 @@ class _GenderPageState extends State<GenderPage> {
               image: 'assets/icons/male_icon.png',
               text: 'Male',
               color: Colors.blue[500]!,
-              isSelected: userSetupController.gender == 'male',
+              isSelected: user.gender == 'male',
               onPressed: () {
                 setState(() {
-                  userSetupController.gender = 'male';
+                  user.gender = 'male';
                 });
                 UserService.saveGender('male');
               },
@@ -72,13 +72,13 @@ class _GenderPageState extends State<GenderPage> {
                 nextRoute: '/setup/height',
                 onNext: () {
                   // Validation: ensure gender is selected
-                  if (userSetupController.gender == null) {
+                  if (user.gender == null) {
                     SnackbarHelper.showError(context, "please select a gender");
                     return false;
                   }
 
-                  if(userSetupController.gender == 'female' || userSetupController.gender == 'male') {
-                    SnackbarHelper.showInfo(context, 'You selected ${userSetupController.gender}');
+                  if(user.gender == 'female' || user.gender == 'male') {
+                    SnackbarHelper.showInfo(context, 'You selected ${user.gender}');
 
                   }
                   return true;

@@ -1,13 +1,13 @@
+import 'package:fit_go/domain/models/workoutplan_model.dart';
 import 'package:flutter/material.dart';
-import 'package:fit_go/data/gym_data/user_activity.dart';
 import 'package:fit_go/ui/widgets/appbar.dart';
 
 class FullCalendarPage extends StatefulWidget {
-  final UserActivity userActivity;
+  final WorkoutplanModel workoutplanModel;
 
   const FullCalendarPage({
     super.key,
-    required this.userActivity,
+    required this.workoutplanModel,
   });
 
   @override
@@ -34,7 +34,7 @@ class _FullCalendarPageState extends State<FullCalendarPage> {
       'sunday'
     ];
     final dayName = dayNames[date.weekday - 1];
-    return widget.userActivity.schedule.contains(dayName);
+    return widget.workoutplanModel.weeklySchedule.contains(dayName);
   }
 
   List<DateTime> _getDaysInMonth(DateTime month) {

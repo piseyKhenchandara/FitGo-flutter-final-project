@@ -1,10 +1,16 @@
+import 'package:fit_go/domain/models/user_model.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fit_go/controllers/user_setup_controller.dart';
-import 'package:fit_go/models/enums.dart';
-import 'package:fit_go/service/user_setup_service.dart';
-import 'package:fit_go/service/validation_service.dart';
+import 'package:fit_go/domain/models/enums.dart';
+import 'package:fit_go/domain/service/user_setup_service.dart';
+import 'package:fit_go/domain/service/validation_service.dart';
+
+late UserModel user;
 
 void main() {
+  setUp(() {
+    // Initialize user instance before each test group
+    user = UserModel();
+  });
   group('Validation Tests', () {
     test('Name validation should reject empty name', () {
       final result = ValidationService.validateName('');
@@ -39,8 +45,8 @@ void main() {
 
   group('BMI Calculation Tests', () {
     test('BMI should be calculated correctly', () {
-      userSetupController.height = 170; // cm
-      userSetupController.weight = 70.0; // kg
+      user.height = 170; // cm
+      user.weight = 70.0; // kg
       
       final bmi = UserService.calculateBMI();
       
@@ -50,8 +56,8 @@ void main() {
     });
 
     test('BMI should return null if height is missing', () {
-      userSetupController.height = null;
-      userSetupController.weight = 70.0;
+      user.height = null;
+      user.weight = 70.0;
       
       final bmi = UserService.calculateBMI();
       
@@ -59,8 +65,8 @@ void main() {
     });
 
     test('BMI should return null if weight is missing', () {
-      userSetupController.height = 170;
-      userSetupController.weight = null;
+      user.height = 170;
+      user.weight = null;
       
       final bmi = UserService.calculateBMI();
       
@@ -68,36 +74,31 @@ void main() {
     });
   });
 
-  group('UserSetupController Tests', () {
-    setUp(() {
-      // Clear data before each test
-      userSetupController.clear();
-    });
-
+  group('user Tests', () {
     test('isComplete should be false when data is incomplete', () {
-      expect(userSetupController.isComplete, isFalse);
+      expect(user.isComplete, isFalse);
     });
 
     test('isComplete should be true when all data is filled', () {
-      userSetupController.name = 'John';
-      userSetupController.age = 25;
-      userSetupController.gender = 'male';
-      userSetupController.height = 170;
-      userSetupController.weight = 70.0;
-      userSetupController.weight_avg = 24.5;
-      userSetupController.bmi = 24.5;
-      userSetupController.goal = GoalType.stayFit;
-      userSetupController.schedule = ['monday', 'tuesday', 'wednesday'];
+      user.name = 'John';
+      user.age = 25;
+      user.gender = 'male';
+      user.height = 170;
+      user.weight = 70.0;
+      user.weight_avg = 24.5;
+      user.bmi = 24.5;
+      user.goal = GoalType.stayFit;
+      user.weeklySchedule = ['monday', 'tuesday', 'wednesday'];
       
-      expect(userSetupController.isComplete, isTrue);
+      expect(user.isComplete, isTrue);
     });
 
     test('toMap should convert controller to Map correctly', () {
-      userSetupController.name = 'John';
-      userSetupController.age = 25;
-      userSetupController.gender = 'male';
+      user.name = 'John';
+      user.age = 25;
+      user.gender = 'male';
       
-      final map = userSetupController.toMap();
+      final map = user.toMap();
       
       expect(map['name'], 'John');
       expect(map['age'], 25);
