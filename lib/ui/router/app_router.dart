@@ -1,6 +1,5 @@
 import 'package:fit_go/ui/mainscreen/homepage.dart';
 import 'package:fit_go/ui/onboarding/onboarding_page.dart';
-
 import 'package:fit_go/ui/setupscreen/gender_page.dart';
 import 'package:fit_go/ui/setupscreen/height_page.dart';
 import 'package:fit_go/ui/setupscreen/schedule_page.dart';
@@ -13,7 +12,7 @@ class AppRouter {
   static GoRouter getRouter(bool isSetupComplete) {
     
     return GoRouter(
-     initialLocation: isSetupComplete ? '/homepage' : '/homepage',
+     initialLocation: isSetupComplete ? '/homepage' : '/onboarding',
 
     redirect: (context, state) {
        
