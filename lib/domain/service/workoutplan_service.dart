@@ -37,14 +37,14 @@ class WorkoutplanService {
     },
   };
 
-  /// Generate a 30-day workout plan based on user schedule and goal
+  
   static WorkoutplanModel generate30DayPlan({
     required List<String>? scheduleOverride,
     required List<Day>? weeklyDaysOverride,
   }) {
     final schedule = scheduleOverride ?? user.weeklySchedule ?? [];
     
-    // Use provided weekly days or generate new ones
+    
     final weeklyDays = weeklyDaysOverride ?? _generateWeeklySchedule(schedule);
     final monthlyPlan = _generate30DayInstances(weeklyDays);
 
@@ -128,7 +128,7 @@ class WorkoutplanService {
 
       final dayTemplate = weeklyDays[dayOfWeek % 7];
 
-      // Create exercise instances from template
+      
       final exercises = dayTemplate.exercises;
 
       monthlyPlan.add(Day(

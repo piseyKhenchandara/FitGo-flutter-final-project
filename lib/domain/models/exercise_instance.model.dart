@@ -21,7 +21,7 @@ class ExerciseInstance {
     this.completed = false,
   });
 
-  /// Complete one rep and update remaining time
+
   void completeRep() {
     if (completedReps < reps) {
       completedReps++;
