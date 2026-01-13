@@ -1,6 +1,6 @@
-import 'package:fit_go/controllers/user_setup_controller.dart';
-import 'package:fit_go/router/app_router.dart';
-import 'package:fit_go/service/user_local_storage_service.dart';
+import 'package:fit_go/domain/models/user_setup_controller.dart';
+import 'package:fit_go/ui/router/app_router.dart';
+import 'package:fit_go/domain/service/user_local_storage_service.dart';
 import 'package:flutter/material.dart';
 
 

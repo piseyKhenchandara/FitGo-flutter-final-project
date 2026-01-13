@@ -1,7 +1,7 @@
 import 'dart:math';
-import 'package:fit_go/controllers/user_setup_controller.dart';
+import 'package:fit_go/domain/models/user_setup_controller.dart';
 import 'package:fit_go/data/gym_data/activity.dart';
-import 'package:fit_go/models/enums.dart';
+import 'package:fit_go/domain/models/enums.dart';
 
 class UserActivity {
   List<String> schedule;
@@ -37,6 +37,8 @@ class UserActivity {
       'high': {'arms': 2, 'back': 2, 'legs': 3, 'shoulder': 2},
     },
   };
+
+  
 
   UserActivity({List<String>? scheduleOverride})
     : schedule = scheduleOverride ?? userSetupController.schedule ?? [] {
@@ -158,6 +160,9 @@ class UserActivity {
       }
     }
   }
+
+
+  
 
   static Future<UserActivity?> fromMap(data) async {
     return null;

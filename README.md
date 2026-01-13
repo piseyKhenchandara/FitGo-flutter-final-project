@@ -189,3 +189,8 @@ The application follows a clean layered architecture pattern:
 - Integrate fitness APIs (step counter, heart rate)
 
 ---
+
+## UML Class Diagram
+
+For a detailed class-level view of models, services, and controller relationships, see [docs/uml.md](docs/uml.md).
+

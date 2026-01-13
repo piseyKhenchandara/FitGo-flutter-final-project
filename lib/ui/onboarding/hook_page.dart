@@ -1,4 +1,4 @@
-import 'package:fit_go/widgets/appbar.dart';
+import 'package:fit_go/ui/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 
 class HookPage extends StatelessWidget {
