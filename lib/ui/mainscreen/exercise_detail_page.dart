@@ -1,17 +1,18 @@
 import 'dart:async';
-import 'package:fit_go/data/gym_data/user_activity.dart';
+import 'package:fit_go/domain/models/workoutplan_model.dart';
+import 'package:fit_go/domain/models/exercise_instance.model.dart';
 import 'package:fit_go/ui/widgets/appbar.dart';
 import 'package:fit_go/ui/widgets/homepage_header.dart';
 import 'package:flutter/material.dart';
 
 class ExerciseDetailPage extends StatefulWidget {
-  final UserActivity userActivity;
+  final WorkoutplanModel workoutplanModel;
   final int dayIndex;
   final int activityIndex;
 
   const ExerciseDetailPage({
     super.key,
-    required this.userActivity,
+    required this.workoutplanModel,
     required this.dayIndex,
     required this.activityIndex,
   });
@@ -21,12 +22,14 @@ class ExerciseDetailPage extends StatefulWidget {
 }
 
 class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
-  late Map<String, dynamic> exercise;
+  late ExerciseInstance exercise;
   Timer? timer;
+
   bool isTimerRunning = false;
   int currentExerciseIndex = 0;
-  int originalDuration = 0;
-  static const int secondsPerRep = 3; // 3 seconds per rep
+
+  static const int secondsPerRep = 3;
+  int elapsedSeconds = 0;
 
   @override
   void initState() {
@@ -36,76 +39,61 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
   }
 
   void loadExercise() {
-    final exercises = widget.userActivity.getActivitiesForDay(widget.dayIndex);
-    if (currentExerciseIndex >= 0 && currentExerciseIndex < exercises.length) {
-      exercise = exercises[currentExerciseIndex];
-      
-      // Calculate total duration: remaining reps × 3 seconds
-      int remainingReps = (exercise['reps'] ?? 0) - (exercise['completedReps'] ?? 0);
-      originalDuration = remainingReps * secondsPerRep;
-      
-      // Set remainingSeconds if not already set
-      if (exercise['remainingSeconds'] == null || exercise['remainingSeconds'] == 0) {
-        exercise['remainingSeconds'] = originalDuration;
-      }
+    final dayInstance =
+        widget.workoutplanModel.getExercisesForDay(widget.dayIndex);
+
+    if (dayInstance != null &&
+        currentExerciseIndex >= 0 &&
+        currentExerciseIndex < dayInstance.exercises.length) {
+      exercise = dayInstance.exercises[currentExerciseIndex];
+      elapsedSeconds = 0;
+
+      int remainingReps = exercise.reps - exercise.completedReps;
+      exercise.remainingSeconds = remainingReps * secondsPerRep;
     }
   }
 
   void startTimer() {
     if (isTimerRunning) return;
-    
-    setState(() {
-      isTimerRunning = true;
-    });
+
+    setState(() => isTimerRunning = true);
 
     timer?.cancel();
     timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (exercise['remainingSeconds'] > 0) {
-        setState(() {
-          exercise['remainingSeconds']--;
-          
-          // Check if we completed a rep (every 3 seconds)
-          int remainingReps = (exercise['reps'] ?? 0) - (exercise['completedReps'] ?? 0);
-          int expectedSeconds = remainingReps * secondsPerRep;
-          
-          // If we've counted down 3 seconds, complete a rep
-          if (exercise['remainingSeconds'] > 0 && 
-              exercise['remainingSeconds'] == expectedSeconds - secondsPerRep) {
-            completeRep();
-          }
-          
-          // Auto complete when time reaches 0
-          if (exercise['remainingSeconds'] == 0) {
-            completeRep();
-            pauseTimer();
-          }
-        });
+      if (exercise.completedReps >= exercise.reps) {
+        pauseTimer();
+        return;
       }
+
+      setState(() {
+        elapsedSeconds++;
+        exercise.remainingSeconds--;
+
+        if (elapsedSeconds % secondsPerRep == 0) {
+          completeRep();
+        }
+      });
     });
+  }
+
+  void pauseTimer() {
+    timer?.cancel();
+    setState(() => isTimerRunning = false);
   }
 
   void restartTimer() {
     pauseTimer();
     setState(() {
-      // Recalculate duration based on remaining reps
-      int remainingReps = (exercise['reps'] ?? 0) - (exercise['completedReps'] ?? 0);
-      originalDuration = remainingReps * secondsPerRep;
-      exercise['remainingSeconds'] = originalDuration;
+      elapsedSeconds = 0;
+      int remainingReps = exercise.reps - exercise.completedReps;
+      exercise.remainingSeconds = remainingReps * secondsPerRep;
     });
-  }
-
-  void pauseTimer() {
-    setState(() {
-      isTimerRunning = false;
-    });
-    timer?.cancel();
   }
 
   void completeRep() {
-    widget.userActivity.completeRep(widget.dayIndex, currentExerciseIndex);
-    setState(() {
-      loadExercise(); // Reload to get updated values
-    });
+    widget.workoutplanModel
+        .completeRep(widget.dayIndex, currentExerciseIndex);
+    loadExercise();
   }
 
   void goToPreviousExercise() {
@@ -114,25 +102,26 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
       setState(() {
         currentExerciseIndex--;
         loadExercise();
-        isTimerRunning = false;
       });
     }
   }
 
   void goToNextExercise() {
-    final exercises = widget.userActivity.getActivitiesForDay(widget.dayIndex);
-    if (currentExerciseIndex < exercises.length - 1) {
+    final dayInstance =
+        widget.workoutplanModel.getExercisesForDay(widget.dayIndex);
+
+    if (dayInstance != null &&
+        currentExerciseIndex < dayInstance.exercises.length - 1) {
       pauseTimer();
       setState(() {
         currentExerciseIndex++;
         loadExercise();
-        isTimerRunning = false;
       });
     }
   }
 
   String getFormattedTime() {
-    int seconds = exercise['remainingSeconds'] ?? 0;
+    int seconds = exercise.remainingSeconds;
     int minutes = seconds ~/ 60;
     int secs = seconds % 60;
     return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
@@ -146,35 +135,33 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final exercises = widget.userActivity.getActivitiesForDay(widget.dayIndex);
-    
+    final dayInstance =
+        widget.workoutplanModel.getExercisesForDay(widget.dayIndex)!;
+
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 12, 39, 135),
+      backgroundColor: const Color.fromARGB(255, 12, 39, 135),
       appBar: Appbar(),
       body: Container(
-        decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color.fromARGB(255, 12, 39, 135), // Purple
-                    Color(0xFF1976D2), // Blue
-                    Color(0xFF26C6DA), // Cyan
-                  ],
-                ),
-              ),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromARGB(255, 12, 39, 135),
+              Color(0xFF1976D2),
+              Color(0xFF26C6DA),
+            ],
+          ),
+        ),
         child: Column(
           children: [
-            
             HomepageHeader(
               dayNumber: widget.dayIndex + 1,
-              totalExercises: exercises.length,
-              duration: widget.userActivity.getTotalDurationForDay(widget.dayIndex),
+              totalExercises: dayInstance.exercises.length,
+              duration:
+                  widget.workoutplanModel.getTotalDurationForDay(widget.dayIndex),
             ),
-            
             const SizedBox(height: 16),
-            
-         
             Expanded(
               child: Center(
                 child: Container(
@@ -194,145 +181,96 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                     
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          // Left Arrow
                           IconButton(
-                            icon: const Icon(Icons.chevron_left, size: 28),
-                            onPressed: currentExerciseIndex > 0 
-                                ? goToPreviousExercise 
-                                : null,
-                            color: currentExerciseIndex > 0 
-                                ? Colors.black 
-                                : Colors.grey[300],
+                            icon:
+                                const Icon(Icons.chevron_left, size: 28),
+                            onPressed:
+                                currentExerciseIndex > 0
+                                    ? goToPreviousExercise
+                                    : null,
                           ),
-                          
-                         
                           Expanded(
                             child: Text(
-                              exercise['name'] ?? 'Exercise',
+                              exercise.template.name,
                               textAlign: TextAlign.center,
                               style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
-                          
-                          
                           IconButton(
-                            icon: const Icon(Icons.chevron_right, size: 28),
-                            onPressed: currentExerciseIndex < exercises.length - 1 
-                                ? goToNextExercise 
-                                : null,
-                            color: currentExerciseIndex < exercises.length - 1 
-                                ? Colors.black 
-                                : Colors.grey[300],
+                            icon:
+                                const Icon(Icons.chevron_right, size: 28),
+                            onPressed:
+                                currentExerciseIndex <
+                                        dayInstance.exercises.length - 1
+                                    ? goToNextExercise
+                                    : null,
                           ),
                         ],
                       ),
-                      
                       const SizedBox(height: 30),
-
-                      exercise['image'] != null
-                          ? Image.network(
-                              exercise['image'],
-                              height: 120,
-                              fit: BoxFit.contain,
-                              errorBuilder: (_, __, ___) => 
-                                  const Icon(Icons.fitness_center, size: 100, color: Colors.grey),
-                            )
-                          : const Icon(Icons.fitness_center, size: 100, color: Colors.grey),
-                      
+                      Image.network(
+                        exercise.template.image,
+                        height: 120,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) =>
+                            const Icon(Icons.fitness_center,
+                                size: 100, color: Colors.grey),
+                      ),
                       const SizedBox(height: 40),
-
-                     
                       Text(
-                        '${(exercise['reps'] ?? 0) - (exercise['completedReps'] ?? 0)}',
+                        '${exercise.reps - exercise.completedReps}',
                         style: const TextStyle(
                           fontSize: 80,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFFFF3B3B),
-                          height: 1.0,
                         ),
                       ),
-                      
                       const SizedBox(height: 8),
-                      
-            
                       Text(
                         'Reps Remaining (3s each)',
                         style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.w500,
-                        ),
+                            fontSize: 16, color: Colors.grey[600]),
                       ),
-                      
                       const SizedBox(height: 30),
-
-                    
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                        
                           Text(
                             getFormattedTime(),
                             style: const TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                            ),
+                                fontSize: 28,
+                                fontWeight: FontWeight.w600),
                           ),
-                          
                           const SizedBox(width: 20),
-                          
-                        
-                          Row(
-                            children: [
-                              ElevatedButton(
-                                onPressed: isTimerRunning ? pauseTimer : startTimer,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF00E676),
-                                  foregroundColor: Colors.white,
-                                  shape: const CircleBorder(),
-                                  padding: const EdgeInsets.all(20),
-                                  elevation: 0,
-                                ),
-                                child: Text(
-                                  isTimerRunning ? 'Pause' : 'Start',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              
-                              const SizedBox(width: 10),
-                              
-                              ElevatedButton(
-                                onPressed: restartTimer,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.orange,
-                                  foregroundColor: Colors.white,
-                                  shape: const CircleBorder(),
-                                  padding: const EdgeInsets.all(20),
-                                  elevation: 0,
-                                ),
-                                child: const Icon(
-                                  Icons.refresh,
-                                  size: 24,
-                                ),
-                              ),
-                            ],
+                          ElevatedButton(
+                            onPressed:
+                                isTimerRunning ? pauseTimer : startTimer,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color(0xFF00E676),
+                              shape: const CircleBorder(),
+                              padding: const EdgeInsets.all(20),
+                            ),
+                            child: Text(
+                                isTimerRunning ? 'Pause' : 'Start'),
+                          ),
+                          const SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: restartTimer,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange,
+                              shape: const CircleBorder(),
+                              padding: const EdgeInsets.all(20),
+                            ),
+                            child: const Icon(Icons.refresh),
                           ),
                         ],
                       ),
-                      
-                      const SizedBox(height: 20),
                     ],
                   ),
                 ),

@@ -158,7 +158,23 @@ flutter run
 
 ## License
 
-<<<<<<< HEAD
 Educational project for Flutter course final project.
-=======
-Educational project for Flutter course final project.
+
+---
+
+## Future Improvements
+- Add backend and user authentication  
+- Save workout progress using a database  
+- Add more workout types and exercises
+- Implement workout history tracking
+- Add dark mode support
+- Improve animations and overall UX  
+- Add social features (share progress)
+- Integrate fitness APIs (step counter, heart rate)
+
+---
+
+## UML Class Diagram
+
+For a detailed class-level view of models, services, and controller relationships, see [docs/uml.md](docs/uml.md).
+

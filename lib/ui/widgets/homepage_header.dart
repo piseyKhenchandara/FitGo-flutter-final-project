@@ -22,11 +22,11 @@ class HomepageHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Back button
+          
           
           SizedBox(height: 20),
           
-          // Day title
+        
           Text(
             'Day $dayNumber',
             style: TextStyle(
@@ -37,7 +37,7 @@ class HomepageHeader extends StatelessWidget {
           ),
           SizedBox(height: 16),
           
-          // Stats row
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [

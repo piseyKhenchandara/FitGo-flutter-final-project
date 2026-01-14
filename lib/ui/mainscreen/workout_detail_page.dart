@@ -1,25 +1,21 @@
+import 'package:fit_go/domain/models/workoutplan_model.dart';
 import 'package:fit_go/ui/mainscreen/exercise_detail_page.dart';
 import 'package:fit_go/ui/widgets/appbar.dart';
 import 'package:fit_go/ui/widgets/homepage_header.dart';
 import 'package:fit_go/ui/widgets/rest_day_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:fit_go/data/gym_data/user_activity.dart';
 
 
 class WorkoutDetailPage extends StatefulWidget {
   final int dayNumber;
-  final List<Map<String, dynamic>> exercises;
-  final String duration;
-  final UserActivity userActivity;
   final int dayIndex;
+  final WorkoutplanModel workoutplanModel;
 
   const WorkoutDetailPage({
     super.key,
     required this.dayNumber,
-    required this.exercises,
-    required this.duration,
-    required this.userActivity,
     required this.dayIndex,
+    required this.workoutplanModel,
   });
 
   @override
@@ -33,13 +29,15 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final dayInstance = widget.workoutplanModel.getExercisesForDay(widget.dayIndex);
+    final isRestDay = dayInstance == null || dayInstance.isRestDay || dayInstance.exercises.isEmpty;
+    final duration = widget.workoutplanModel.getTotalDurationForDay(widget.dayIndex);
 
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 12, 39, 135),
       appBar: Appbar(),
-      body: widget.exercises.isEmpty
-          ? RestDayWidget(
-            )
+      body: isRestDay
+          ? RestDayWidget()
           : Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -57,8 +55,8 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                   // Header with back button and day info
                   HomepageHeader(
                     dayNumber: widget.dayNumber,
-                    duration: widget.duration,
-                    totalExercises: widget.exercises.length,
+                    duration: duration,
+                    totalExercises: dayInstance.exercises.length,
                   ),
         
                 
@@ -67,10 +65,10 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                 Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: widget.exercises.length,
+                    itemCount: dayInstance.exercises.length,
                     itemBuilder: (context, index) {
-                      final exercise = widget.exercises[index];
-                      final isCompleted = exercise['completed'] == true;
+                      final exercise = dayInstance.exercises[index];
+                      final isCompleted = exercise.completed;
                       
                       return Card(
                         margin: const EdgeInsets.only(bottom: 12),
@@ -81,7 +79,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ExerciseDetailPage(
-                                  userActivity: widget.userActivity,
+                                  workoutplanModel: widget.workoutplanModel,
                                   dayIndex: widget.dayIndex,
                                   activityIndex: index,
                                 ),
@@ -90,23 +88,21 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                             // Refresh the page when returning from exercise detail
                             _refreshPage();
                           },
-                          leading: exercise['image'] != null
-                              ? Image.network(
-                                  exercise['image'],
+                          leading: Image.network(
+                                  exercise.template.image,
                                   width: 50,
                                   height: 50,
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) {
                                     return const Icon(Icons.fitness_center);
                                   },
-                                )
-                              : const Icon(Icons.fitness_center),
+                                ),
                           title: Text(
-                            exercise['name'],
+                            exercise.template.name,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
-                            'Reps: ${exercise['completedReps']}/${exercise['reps']} | Type: ${exercise['type']}',
+                            'Reps: ${exercise.completedReps}/${exercise.reps} | Type: ${exercise.template.type}',
                           ),
                           trailing: isCompleted 
                               ? const Icon(Icons.check_circle, color: Colors.green, size: 24)
@@ -119,6 +115,6 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
               ],
             ),
           ),
-  );
-}
+    );
+  }
 }

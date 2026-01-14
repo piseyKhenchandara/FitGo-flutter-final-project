@@ -1,6 +1,5 @@
 import 'dart:io';
-
-import 'package:fit_go/domain/models/user_setup_controller.dart';
+import 'package:fit_go/domain/models/user_model.dart';
 import 'package:fit_go/domain/service/user_setup_service.dart';
 import 'package:fit_go/domain/service/validation_service.dart';
 import 'package:fit_go/ui/widgets/appbar.dart';
@@ -30,11 +29,11 @@ class _UserInfoPageState extends State<UserInfoPage> {
   void initState() {
     super.initState();
 
-    if (userSetupController.name != null) {
-      _nameController.text = userSetupController.name!;
+    if (user.name != null) {
+      _nameController.text = user.name!;
     }
-    if (userSetupController.age != null) {
-      _ageController.text = userSetupController.age.toString();
+    if (user.age != null) {
+      _ageController.text = user.age.toString();
     }
   }
 

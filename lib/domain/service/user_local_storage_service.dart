@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:fit_go/domain/models/user_setup_controller.dart';
-import 'package:fit_go/data/gym_data/user_activity.dart';
-import 'package:fit_go/domain/models/enums.dart';
+import 'package:fit_go/domain/models/user_model.dart';
 
+import 'package:fit_go/domain/models/enums.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,7 +16,7 @@ class UserLocalStorageService {
     try{
       final dir = await getApplicationDocumentsDirectory();
       final file = File('${dir.path}/user_setup.json');
-      final jsonString = jsonEncode(userSetupController.toMap());
+      final jsonString = jsonEncode(user.toMap());
       await file.writeAsString(jsonString);
       print('save to file : ${file.path}');
       
@@ -34,7 +33,7 @@ class UserLocalStorageService {
     
     try{
       final prefs = await SharedPreferences.getInstance();
-      final jsonString = jsonEncode(userSetupController.toMap());
+      final jsonString = jsonEncode(user.toMap());
       await prefs.setString('user_setup', jsonString);
       print('Saved to web storage');
     }
@@ -111,20 +110,20 @@ class UserLocalStorageService {
 
 
   static void _loadDataIntoController(Map<String, dynamic> data) {
-  userSetupController.name = data['name'];
-  userSetupController.age = data['age'];
-  userSetupController.bmi = data['bmi'];
-  userSetupController.gender = data['gender'];
-  userSetupController.height = data['height'];
-  userSetupController.weight = data['weight']?.toDouble();
-  userSetupController.weight_avg = data['weight_avg']?.toDouble();
+  user.name = data['name'];
+  user.age = data['age'];
+  user.bmi = data['bmi'];
+  user.gender = data['gender'];
+  user.height = data['height'];
+  user.weight = data['weight']?.toDouble();
+  user.weight_avg = data['weight_avg']?.toDouble();
   
-  if (data['schedule'] != null) {
-    userSetupController.schedule = List<String>.from(data['schedule']);
+  if (data['weeklySchedule'] != null) {
+    user.weeklySchedule = List<String>.from(data['weeklySchedule']);
   }
   
   if (data['goal'] != null) {
-    userSetupController.goal = GoalType.values.firstWhere(
+    user.goal = GoalType.values.firstWhere(
       (e) => e.name == data['goal'],
       orElse: () => GoalType.stayFit,
     ) as GoalType?;
@@ -132,7 +131,7 @@ class UserLocalStorageService {
   
   if (data['imageData'] != null && data['imageData'] != '') {
     try {
-      userSetupController.profileImageWeb = base64Decode(data['imageData']);
+      user.profileImageWeb = base64Decode(data['imageData']);
       print(' Image loaded!');
     } catch (e) {
       print(' Image error: $e');
@@ -140,62 +139,10 @@ class UserLocalStorageService {
   }
 }
 
-// ===================== LOAD EXERCISE PROGRESS =====================
 
-static Future<UserActivity?> loadExerciseProgressFromFile() async {
-  try {
-    final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/exercise_progress.json');
 
-    if (!await file.exists()) {
-      print('Exercise progress file does not exist');
-      return null;
-    }
-
-    final jsonString = await file.readAsString();
-    final data = jsonDecode(jsonString);
-    
-    print('Exercise progress loaded from file');
-    return UserActivity.fromMap(data);
-  } catch (error) {
-    print('Error loading exercise progress from file: $error');
-    return null;
-  }
-}
-
-static Future<UserActivity?> loadExerciseProgressFromWeb() async {
-  try {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonString = prefs.getString('exercise_progress');
-
-    if (jsonString == null) {
-      print('No exercise progress in web storage');
-      return null;
-    }
-    
-    final data = jsonDecode(jsonString);
-    print('Exercise progress loaded from web storage');
-    return UserActivity.fromMap(data);
-  } catch (error) {
-    print('Error loading exercise progress from web: $error');
-    return null;
-  }
-}
-
-static Future<UserActivity?> loadExerciseProgress() async {
-  if (kIsWeb) {
-    return await loadExerciseProgressFromWeb();
-  } else {
-    return await loadExerciseProgressFromFile();
-  }
-}
 
 
 
   
 }
-
-
-
-
-
